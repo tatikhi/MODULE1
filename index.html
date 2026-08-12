@@ -126,10 +126,18 @@
             text-align: center;
         }
 
+        /* БЛОК КНОПОК В ШАПКЕ */
+        .header-buttons {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 15px;
+        }
+
         /* КНОПКА СКОПИРОВАТЬ ССЫЛКУ */
         .btn-copy-top {
             width: fit-content;
-            margin: 0 auto 15px auto;
             background: #FFFFFF;
             border: none;
             color: var(--header-text-unified);
@@ -148,6 +156,23 @@
 
         .btn-copy-top:hover {
             background: #F8F9FA;
+        }
+
+        /* НЕЗАМЕТНАЯ КНОПКА ОТКРЫТЬ ДНИ ДЛЯ РОДИТЕЛЕЙ */
+        .btn-open-parents {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: #FFFFFF;
+            font-size: 11px;
+            font-weight: 600;
+            text-decoration: underline;
+            cursor: pointer;
+            padding: 4px 8px;
+            transition: color 0.2s ease;
+        }
+
+        .btn-open-parents:hover {
+            color: #FFF8D6;
         }
 
         /* ИНФОРМАЦИЯ О РЕБЕНКЕ */
@@ -492,10 +517,14 @@
 
         <div class="tpr-banner">Методика TPR: учим английский через движение и игры</div>
 
-        <button class="btn-copy-top" onclick="copyPersonalLink()">
-            <svg class="svg-icon" viewBox="0 0 24 24"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>
-            Скопировать мою ссылку с прогрессом
-        </button>
+        <div class="header-buttons">
+            <button class="btn-copy-top" onclick="copyPersonalLink()">
+                <svg class="svg-icon" viewBox="0 0 24 24"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>
+                Скопировать ссылку с прогрессом
+            </button>
+            <!-- КНОПКА ОТКРЫТЬ ДНИ ДЛЯ РОДИТЕЛЕЙ -->
+            <button class="btn-open-parents" onclick="openDaysForParents()">⚙️ Открыть дни (при сбросе кэша)</button>
+        </div>
 
         <div class="child-info-box">
             <span id="child-name-display">СУПЕРГЕРОЙ, 5 лет</span>
@@ -516,7 +545,7 @@
     <!-- DAYS CONTAINER -->
     <div id="days-container"></div>
 
-    <!-- FOOTER -->
+    <!-- FOOTER (ВСЕГДА ВИДИМ) -->
     <div class="footer">
         <div id="certificate-block" style="display:none; margin-bottom: 20px;">
             <button class="btn-certificate" onclick="generateCertificate()">
@@ -529,7 +558,7 @@
             2026 [@tatikhi]. Все права защищены. Материалы предназначены исключительно для индивидуального личного использования. Распространение, копирование и передача доступа третьим лицам запрещены.
         </div>
 
-        <!-- КНОПКА ДЛЯ РОДИТЕЛЕЙ -->
+        <!-- КНОПКА ДЛЯ РОДИТЕЛЕЙ (СБРОС) -->
         <button class="btn-reset-parents" onclick="resetDayForParents()">⚙️ Сбросить прогресс дня (для родителей)</button>
     </div>
 </div>
@@ -603,7 +632,6 @@ const MEMORY_MATCHED_KEY = `tracker_memory_matched_${docId}`;
 
 let completedDays = [];
 
-// Если прогресс передан прямо в ссылке, берём его оттуда и сохраняем локально
 if (urlProgress) {
     try {
         completedDays = urlProgress.split(',').map(Number).filter(n => !isNaN(n) && n >= 1 && n <= 30);
@@ -700,7 +728,7 @@ function toggleDay(day, event) {
     }
 }
 
-// ФУНКЦИЯ СБРОСА ДНЯ ДЛЯ РОДИТЕЛЕЙ
+// ФУНКЦИЯ СБРОСА ДНЯ ДЛЯ РОДИТЕЛЕЙ (ФУТЕР)
 function resetDayForParents() {
     const input = prompt("Введите номер дня (от 1 до 30), который нужно сделать невыполненным:");
     if (input !== null) {
@@ -723,6 +751,26 @@ function resetDayForParents() {
     }
 }
 
+// ФУНКЦИЯ ПРИНУДИТЕЛЬНОГО ОТКРЫТИЯ ДО УКАЗАННОГО ДНЯ (ШАПКА)
+function openDaysForParents() {
+    const input = prompt("Введите номер последнего дня, до которого нужно открыть прогресс (например: 5):");
+    if (input !== null && input.trim() !== "") {
+        const maxDay = parseInt(input.trim(), 10);
+        if (!isNaN(maxDay) && maxDay >= 1 && maxDay <= 30) {
+            // Формируем массив всех дней от 1 до введенного включительно
+            completedDays = [];
+            for (let i = 1; i <= maxDay; i++) {
+                completedDays.push(i);
+            }
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(completedDays));
+            renderTracker();
+            alert(`Прогресс успешно восстановлен до ${maxDay}-го дня!`);
+        } else {
+            alert("Пожалуйста, введите корректный номер дня от 1 до 30.");
+        }
+    }
+}
+
 // ФУНКЦИЯ КОПИРОВАНИЯ ССЫЛКИ С ПРОГРЕССОМ
 function copyPersonalLink() {
     const baseUrl = window.location.origin + window.location.pathname;
@@ -731,7 +779,7 @@ function copyPersonalLink() {
     const fullLink = baseUrl + nameParam + progressParam;
 
     navigator.clipboard.writeText(fullLink).then(() => {
-        alert('Ссылка с актуальным прогрессом скопирована! Теперь её можно отправить в Telegram.');
+        alert('Ссылка скопирована!');
     }).catch(() => {
         prompt("Скопируйте ссылку вручную:", fullLink);
     });
