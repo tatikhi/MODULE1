@@ -479,9 +479,11 @@
 </head>
 <body>
 
+<!-- КАНВАС ДЛЯ КОНФЕТТИ -->
 <canvas id="confetti-canvas"></canvas>
 
 <div class="container">
+    <!-- HEADER -->
     <div class="header">
         <div class="greeting-box">
             <div class="fox-avatar">🦊</div>
@@ -492,7 +494,7 @@
 
         <button class="btn-copy-top" onclick="copyPersonalLink()">
             <svg class="svg-icon" viewBox="0 0 24 24"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>
-            Скопировать мою ссылку
+            Скопировать мою ссылку с прогрессом
         </button>
 
         <div class="child-info-box">
@@ -511,8 +513,10 @@
         <div class="marathon-banner">МАРАФОН НА 30 ДНЕЙ</div>
     </div>
 
+    <!-- DAYS CONTAINER -->
     <div id="days-container"></div>
 
+    <!-- FOOTER -->
     <div class="footer">
         <div id="certificate-block" style="display:none; margin-bottom: 20px;">
             <button class="btn-certificate" onclick="generateCertificate()">
@@ -525,6 +529,7 @@
             2026 [@tatikhi]. Все права защищены. Материалы предназначены исключительно для индивидуального личного использования. Распространение, копирование и передача доступа третьим лицам запрещены.
         </div>
 
+        <!-- КНОПКА ДЛЯ РОДИТЕЛЕЙ -->
         <button class="btn-reset-parents" onclick="resetDayForParents()">⚙️ Сбросить прогресс дня (для родителей)</button>
     </div>
 </div>
@@ -581,9 +586,10 @@ const daysData = [
     { day: 30, week: 5, isBonus: true, title: "ДЕНЬ 30 : ТВОРЧЕСКОЕ ЗАДАНИЕ «РАСКРАСКА»", parentText: "Родителям: финальное творческое задание! Задача - раскрасить, используя изученные цвета и громко сказать: «DOG!»." }
 ];
 
-// --- 2. ИНИЦИАЛИЗАЦИЯ ИМЕНИ И ЛОКАЛЬНОГО ХРАНИЛИЩА ---
+// --- 2. ИНИЦИАЛИЗАЦИЯ ИМЕНИ И ЧТЕНИЕ ПРОГРЕССА ИЗ ССЫЛКИ ИЛИ ПАМЯТИ ---
 const urlParams = new URLSearchParams(window.location.search);
 const rawName = urlParams.get('name');
+const urlProgress = urlParams.get('p');
 
 const docId = (rawName && rawName.trim() !== '') ? decodeURIComponent(rawName) : 'СУПЕРГЕРОЙ';
 const displayName = docId.split(/[_\-\s]+/)[0].toUpperCase();
@@ -595,7 +601,20 @@ const STORAGE_KEY = `tracker_progress_${docId}`;
 const MEMORY_LAYOUT_KEY = `tracker_memory_layout_${docId}`;
 const MEMORY_MATCHED_KEY = `tracker_memory_matched_${docId}`;
 
-let completedDays = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+let completedDays = [];
+
+// Если прогресс передан прямо в ссылке, берём его оттуда и сохраняем локально
+if (urlProgress) {
+    try {
+        completedDays = urlProgress.split(',').map(Number).filter(n => !isNaN(n) && n >= 1 && n <= 30);
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(completedDays));
+    } catch(e) {
+        completedDays = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+    }
+} else {
+    completedDays = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+}
+
 let matchedMemoryKeys = JSON.parse(localStorage.getItem(MEMORY_MATCHED_KEY)) || [];
 
 // --- 3. ОТРИСОВКА ТРЕКЕРА ---
@@ -702,6 +721,20 @@ function resetDayForParents() {
             alert("Пожалуйста, введите корректный номер дня от 1 до 30.");
         }
     }
+}
+
+// ФУНКЦИЯ КОПИРОВАНИЯ ССЫЛКИ С ПРОГРЕССОМ
+function copyPersonalLink() {
+    const baseUrl = window.location.origin + window.location.pathname;
+    const nameParam = rawName ? `?name=${encodeURIComponent(rawName)}` : '';
+    const progressParam = completedDays.length > 0 ? `${nameParam ? '&' : '?'}p=${completedDays.join(',')}` : '';
+    const fullLink = baseUrl + nameParam + progressParam;
+
+    navigator.clipboard.writeText(fullLink).then(() => {
+        alert('Ссылка с актуальным прогрессом скопирована! Теперь её можно отправить в Telegram.');
+    }).catch(() => {
+        prompt("Скопируйте ссылку вручную:", fullLink);
+    });
 }
 
 // ДВИЖОК КОНФЕТТИ
@@ -902,11 +935,6 @@ function openAndPrintColoring() {
         `);
         printWindow.document.close();
     }
-}
-
-function copyPersonalLink() {
-    navigator.clipboard.writeText(window.location.href);
-    alert('Ссылка скопирована!');
 }
 
 function generateCertificate() {
