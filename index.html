@@ -416,6 +416,8 @@
             cursor: pointer;
             text-align: center;
             padding: 4px;
+            overflow: hidden;
+            position: relative;
         }
 
         .memory-q-icon {
@@ -433,10 +435,12 @@
             background: #FFFFFF;
             border: 2px solid var(--turquoise-accent);
             color: #2C3E50;
+            padding: 0;
         }
 
         .memory-card.matched {
             background: var(--pastel-green);
+            border-color: var(--pastel-green);
             color: var(--btn-text-dark);
         }
 
@@ -756,32 +760,18 @@ function playAudio(dayNumber) {
     audio.play().catch(() => alert(`Аудио файл audio${dayNumber}.mp3 пока не добавлен в папку.`));
 }
 
-// --- 4. МЕМОРИ И РАСКРАСКА ---
-function renderMemoryGameHtml() {
-    return `
-        <div class="memory-grid">
-            <div class="memory-card" onclick="flipCard(this, 'YELLOW')">${svgQuestionCard}</div>
-            <div class="memory-card" onclick="flipCard(this, 'YELLOW')">${svgQuestionCard}</div>
-            <div class="memory-card" onclick="flipCard(this, 'RUN')">${svgQuestionCard}</div>
-            <div class="memory-card" onclick="flipCard(this, 'RUN')">${svgQuestionCard}</div>
-            <div class="memory-card" onclick="flipCard(this, 'HANDS')">${svgQuestionCard}</div>
-            <div class="memory-card" onclick="flipCard(this, 'HANDS')">${svgQuestionCard}</div>
-            <div class="memory-card" onclick="flipCard(this, 'TIGER')">${svgQuestionCard}</div>
-            <div class="memory-card" onclick="flipCard(this, 'TIGER')">${svgQuestionCard}</div>
-        </div>
-    `;
-}
-
+// --- 4. МЕМОРИ (ДЕНЬ 29) С КАРТИНКАМИ И СЛУЧАЙНЫМ ПЕРЕМЕШИВАНИЕМ ---
 let activeCards = [];
-function flipCard(card, word) {
+
+function flipCard(card, imageSrc, wordKey) {
     if (activeCards.length < 2 && !card.classList.contains('flipped')) {
         card.classList.add('flipped');
-        card.textContent = word;
-        activeCards.push({ card, word });
+        card.innerHTML = `<img src="${imageSrc}" alt="${wordKey}" style="width:100%; height:100%; object-fit:cover; border-radius:8px; pointer-events:none;">`;
+        activeCards.push({ card, wordKey });
 
         if (activeCards.length === 2) {
             setTimeout(() => {
-                if (activeCards[0].word === activeCards[1].word) {
+                if (activeCards[0].wordKey === activeCards[1].wordKey) {
                     activeCards[0].card.classList.add('matched');
                     activeCards[1].card.classList.add('matched');
                 } else {
@@ -796,7 +786,37 @@ function flipCard(card, word) {
     }
 }
 
-// Отрисовка кнопки раскраски для Дня 30
+function shuffleArray(array) {
+    const arr = [...array];
+    for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+    }
+    return arr;
+}
+
+function renderMemoryGameHtml() {
+    const memoryItems = [
+        { key: 'YELLOW', img: 'card_yellow.jpg' },
+        { key: 'YELLOW', img: 'card_yellow.jpg' },
+        { key: 'RUN', img: 'card_run.jpg' },
+        { key: 'RUN', img: 'card_run.jpg' },
+        { key: 'HANDS', img: 'card_hands.jpg' },
+        { key: 'HANDS', img: 'card_hands.jpg' },
+        { key: 'TIGER', img: 'card_tiger.jpg' },
+        { key: 'TIGER', img: 'card_tiger.jpg' }
+    ];
+
+    const shuffled = shuffleArray(memoryItems);
+
+    const cardsHtml = shuffled.map(item => 
+        `<div class="memory-card" onclick="flipCard(this, '${item.img}', '${item.key}')">${svgQuestionCard}</div>`
+    ).join('');
+
+    return `<div class="memory-grid">${cardsHtml}</div>`;
+}
+
+// --- 5. РАСКРАСКА (ДЕНЬ 30) ---
 function renderColoringHtml() {
     return `
         <div style="text-align:center; margin-bottom:12px;">
@@ -808,7 +828,6 @@ function renderColoringHtml() {
     `;
 }
 
-// Функция открытия раскраски в новом окне с автоматическим вызовом печати
 function openAndPrintColoring() {
     const printWindow = window.open('', '_blank');
     if (printWindow) {
