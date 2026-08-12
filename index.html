@@ -444,7 +444,7 @@
             color: var(--btn-text-dark);
         }
 
-        /* FOOTER */
+        /* FOOTER & КНОПКА СБРОСА */
         .footer {
             margin-top: 30px;
             text-align: center;
@@ -457,8 +457,29 @@
             color: #95A5A6;
             line-height: 1.5;
             text-align: center;
+            margin-bottom: 12px;
+        }
+
+        .btn-reset-parents {
+            background: transparent;
+            border: none;
+            color: #B0BEC5;
+            font-size: 11px;
+            font-weight: 600;
+            text-decoration: underline;
+            cursor: pointer;
+            padding: 4px 8px;
+            transition: color 0.2s ease;
+        }
+
+        .btn-reset-parents:hover {
+            color: #E56B6F;
         }
     </style>
+
+    <!-- ПОДКЛЮЧЕНИЕ GOOGLE FIREBASE SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
 </head>
 <body>
 
@@ -511,14 +532,29 @@
         <div class="copyright">
             2026 [@tatikhi]. Все права защищены. Материалы предназначены исключительно для индивидуального личного использования. Распространение, копирование и передача доступа третьим лицам запрещены.
         </div>
+
+        <!-- КНОПКА ДЛЯ РОДИТЕЛЕЙ -->
+        <button class="btn-reset-parents" onclick="resetDayForParents()">⚙️ Сбросить прогресс дня (для родителей)</button>
     </div>
 </div>
 
 <script>
+// --- ИНИЦИАЛИЗАЦИЯ GOOGLE FIREBASE ---
+const firebaseConfig = {
+  apiKey: "AIzaSyAY90UvnT4M9Rbqi3ix49yuAsCAYvesi5Y",
+  authDomain: "trackermodule1.firebaseapp.com",
+  projectId: "trackermodule1",
+  storageBucket: "trackermodule1.firebasestorage.app",
+  messagingSenderId: "831507966510",
+  appId: "1:831507966510:web:e2d0c96e950b21ee954dbf"
+};
+
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+
 // ВЕКТОРНЫЕ ИКОНКИ
 const svgLightbulb = `<svg class="svg-icon" style="fill:#F1C40F; width:26px; height:26px; flex-shrink:0;" viewBox="0 0 24 24"><path d="M12 2C8.14 2 5 5.14 5 9c0 2.38 1.19 4.47 3 5.74V17c0 .55.45 1 1 1h6c.55 0 1-.45 1-1v-2.26c1.81-1.27 3-3.36 3-5.74 0-3.86-3.14-7-7-7zm-2 17h4v1h-4zm0 2h4v1h-4z"/></svg>`;
 
-// СИЯЮЩИЙ КУБОК СО ЗВЕЗДОЧКАМИ
 const svgSparklyTrophy = `
     <svg class="svg-trophy-animated" viewBox="0 0 24 24">
         <path d="M19 5h-2V3H7v2H5c-1.1 0-2 .9-2 2v1c0 2.55 1.92 4.63 4.39 4.94A5.01 5.01 0 0011 15.9V18H8v2h8v-2h-3v-2.1c2.12-.39 3.79-2.02 4.39-4.14C19.08 11.63 21 9.55 21 7V5c0-1.1-.9-2-2-2zM5 8V7h2v3.82C5.84 10.4 5 9.3 5 8zm14 0c0 1.3-.84 2.4-2 2.82V7h2v1z"/>
@@ -527,12 +563,10 @@ const svgSparklyTrophy = `
     </svg>
 `;
 
-// ИКОНКА ЗНАКА ВОПРОСА ДЛЯ МЕМОРИ
 const svgQuestionCard = `<svg class="memory-q-icon" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 16h-2v-2h2v2zm1.07-7.75l-.9.92C12.45 11.9 12 12.5 12 14h-2v-.5c0-1.1.45-2.1 1.17-2.83l1.24-1.26c.37-.36.59-.86.59-1.41 0-1.1-.9-2-2-2s-2 .9-2 2H7c0-2.76 2.24-5 5-5s5 2.24 5 5c0 1.04-.42 1.99-1.07 2.75z"/></svg>`;
 
 // --- 1. ДАННЫЕ ДНЕЙ ---
 const daysData = [
-    // Неделя 1
     { day: 1, week: 1, title: "ДЕНЬ 1 : КРАСНЫЙ (RED)", parentText: "Родителям: включите аудио. Задача — быстро найти красный предмет и повторить слово за педагогом." },
     { day: 2, week: 1, title: "ДЕНЬ 2 : СИНИЙ (BLUE)", parentText: "Родителям: включите аудио. Задача — быстро найти синий предмет и повторить слово за педагогом." },
     { day: 3, week: 1, title: "ДЕНЬ 3 : ЖЁЛТЫЙ (YELLOW)", parentText: "Родителям: включите аудио. Задача — быстро найти желтый предмет и повторить слово за педагогом." },
@@ -541,7 +575,6 @@ const daysData = [
     { day: 6, week: 1, title: "ДЕНЬ 6 : РОЗОВЫЙ (PINK)", parentText: "Родителям: включите аудио. Задача — быстро найти розовый предмет и повторить слово за педагогом." },
     { day: 7, week: 1, title: "ДЕНЬ 7 : КОРИЧНЕВЫЙ (BROWN)", parentText: "Родителям: включите аудио. Задача — быстро найти коричневый предмет и повторить слово за педагогом." },
 
-    // Неделя 2
     { day: 8, week: 2, title: "ДЕНЬ 8 : БЕГАТЬ (RUN)", parentText: "Родителям: включите аудио. Задача — побегать и повторить слово за педагогом." },
     { day: 9, week: 2, title: "ДЕНЬ 9 : ОСТАНОВИТЬСЯ (STOP)", parentText: "Родителям: включите аудио. Задача — после активного движения замереть и повторить слово за педагогом." },
     { day: 10, week: 2, title: "ДЕНЬ 10 : ШАГАТЬ (WALK)", parentText: "Родителям: включите аудио. Задача — пошагать и повторить слово за педагогом." },
@@ -550,7 +583,6 @@ const daysData = [
     { day: 13, week: 2, title: "ДЕНЬ 13 : ЛЕТАТЬ (FLY)", parentText: "Родителям: включите аудио. Задача — помахать руками как птица и повторить слово за педагогом." },
     { day: 14, week: 2, title: "ДЕНЬ 14 : ПРЫГАТЬ (JUMP)", parentText: "Родителям: включите аудио. Задача — попрыгать и повторить слово за педагогом." },
 
-    // Неделя 3
     { day: 15, week: 3, title: "ДЕНЬ 15 : РУКИ (HANDS)", parentText: "Родителям: включите аудио. Задача — вытянуть/поднять руки и повторить слово за педагогом." },
     { day: 16, week: 3, title: "ДЕНЬ 16 : НОГИ (FEET)", parentText: "Родителям: включите аудио. Задача — поболтать ногами и повторить слово за педагогом." },
     { day: 17, week: 3, title: "ДЕНЬ 17 : ГОЛОВА (HEAD)", parentText: "Родителям: включите аудио. Задача — дотронуться до головы и повторить слово за педагогом." },
@@ -559,7 +591,6 @@ const daysData = [
     { day: 20, week: 3, title: "ДЕНЬ 20 : УШИ (EARS)", parentText: "Родителям: включите аудио. Задача — потрогать уши и повторить слово за педагогом." },
     { day: 21, week: 3, title: "ДЕНЬ 21 : ЛИЦО (FACE)", parentText: "Родителям: включите аудио. Задача — состроить рожицу и повторить слово за педагогом." },
 
-    // Неделя 4
     { day: 22, week: 4, title: "ДЕНЬ 22 : ЛЕВ (LION)", parentText: "Родителям: включите аудио. Задача — изобразить льва и повторить слово за педагогом." },
     { day: 23, week: 4, title: "ДЕНЬ 23 : ОБЕЗЬЯНА (MONKEY)", parentText: "Родителям: включите аудио. Задача — изобразить обезьянку и повторить слово за педагогом." },
     { day: 24, week: 4, title: "ДЕНЬ 24 : МЕДВЕДЬ (BEAR)", parentText: "Родителям: включите аудио. Задача — изобразить медведя и повторить слово за педагогом." },
@@ -568,27 +599,60 @@ const daysData = [
     { day: 27, week: 4, title: "ДЕНЬ 27 : ТИГР (TIGER)", parentText: "Родителям: включите аудио. Задача — изобразить тигра и повторить слово за педагогом." },
     { day: 28, week: 4, title: "ДЕНЬ 28 : СОБАКА (DOG)", parentText: "Родителям: включите аудио. Задача — изобразить собаку и повторить слово за педагогом." },
 
-    // Бонусные дни
     { day: 29, week: 5, isBonus: true, title: "ДЕНЬ 29 : МИНИ-ИГРА «МЕМОРИ» (НАЙДИ ПАРУ)", parentText: "Родителям: переворачивайте карточки и находите одинаковые пары «слово+картинка»." },
     { day: 30, week: 5, isBonus: true, title: "ДЕНЬ 30 : ТВОРЧЕСКОЕ ЗАДАНИЕ «РАСКРАСКА»", parentText: "Родителям: финальное творческое задание! Задача - раскрасить, используя изученные цвета и громко сказать: «DOG!»." }
 ];
 
-// --- 2. ДИНАМИЧЕСКАЯ ПОДСТАНОВКА ИМЕНИ ИЗ URL И ЗАГОЛОВОК ВКЛАДКИ ---
+// --- 2. ИНИЦИАЛИЗАЦИЯ ИМЕНИ И ПЕРЕМЕННЫХ ---
 const urlParams = new URLSearchParams(window.location.search);
 const rawName = urlParams.get('name');
-const childName = (rawName && rawName.trim() !== '') ? decodeURIComponent(rawName) : 'СУПЕРГЕРОЙ';
 
-document.getElementById('child-name-display').textContent = `${childName}, 5 лет`;
-document.title = `Трекер — ${childName}`;
+const docId = (rawName && rawName.trim() !== '') ? decodeURIComponent(rawName) : 'СУПЕРГЕРОЙ';
+const displayName = docId.split(/[_\-\s]+/)[0].toUpperCase();
 
-// КЛЮЧИ ХРАНЕНИЯ ДЛЯ LOCALSTORAGE
-const STORAGE_KEY = `tracker_progress_${childName}`;
-const MEMORY_LAYOUT_KEY = `tracker_memory_layout_${childName}`;
-const MEMORY_MATCHED_KEY = `tracker_memory_matched_${childName}`;
+document.getElementById('child-name-display').textContent = `${displayName}, 5 лет`;
+document.title = `Трекер — ${displayName}`;
+
+const STORAGE_KEY = `tracker_progress_${docId}`;
+const MEMORY_LAYOUT_KEY = `tracker_memory_layout_${docId}`;
+const MEMORY_MATCHED_KEY = `tracker_memory_matched_${docId}`;
 
 let completedDays = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+let matchedMemoryKeys = JSON.parse(localStorage.getItem(MEMORY_MATCHED_KEY)) || [];
 
-// --- 3. ОТРИСОВКА ТРЕКЕРА ---
+// --- 3. ОБЛАЧНАЯ СИНХРОНИЗАЦИЯ С GOOGLE FIRESTORE ---
+function loadCloudData() {
+    db.collection("children_progress").doc(docId).get().then((doc) => {
+        if (doc.exists) {
+            const data = doc.data();
+            if (data.completedDays) {
+                completedDays = data.completedDays;
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(completedDays));
+            }
+            if (data.memoryMatchedKeys) {
+                matchedMemoryKeys = data.memoryMatchedKeys;
+                localStorage.setItem(MEMORY_MATCHED_KEY, JSON.stringify(matchedMemoryKeys));
+            }
+            if (data.memoryLayout) {
+                localStorage.setItem(MEMORY_LAYOUT_KEY, JSON.stringify(data.memoryLayout));
+            }
+            renderTracker();
+        }
+    }).catch(err => console.log("Офлайн режим, данные из localStorage:", err));
+}
+
+function saveCloudData() {
+    const memoryLayout = JSON.parse(localStorage.getItem(MEMORY_LAYOUT_KEY)) || [];
+    db.collection("children_progress").doc(docId).set({
+        completedDays: completedDays,
+        memoryMatchedKeys: matchedMemoryKeys,
+        memoryLayout: memoryLayout,
+        displayName: displayName,
+        lastUpdated: new Date()
+    }, { merge: true });
+}
+
+// --- 4. ОТРИСОВКА ТРЕКЕРА ---
 function renderTracker() {
     const container = document.getElementById('days-container');
     container.innerHTML = '';
@@ -662,13 +726,39 @@ function isDayUnlocked(day) {
     return completedDays.includes(day - 1);
 }
 
-// ВЫЗОВ ВЫПОЛНЕНИЯ И ЗАПУСК КОНФЕТТИ
 function toggleDay(day, event) {
     if (!completedDays.includes(day)) {
         completedDays.push(day);
         localStorage.setItem(STORAGE_KEY, JSON.stringify(completedDays));
+        saveCloudData();
         launchConfetti(event);
         renderTracker();
+    }
+}
+
+// ФУНКЦИЯ СБРОСА ДНЯ ДЛЯ РОДИТЕЛЕЙ
+function resetDayForParents() {
+    const input = prompt("Введите номер дня (от 1 до 30), который нужно сделать невыполненным:");
+    if (input !== null) {
+        const dayToReset = parseInt(input.trim(), 10);
+        if (!isNaN(dayToReset) && dayToReset >= 1 && dayToReset <= 30) {
+            // Удаляем этот день и все последующие из массива пройденных
+            completedDays = completedDays.filter(day => day < dayToReset);
+            
+            // Если сбрасываем 29-й день (Мемори), сбрасываем и открытые пары
+            if (dayToReset <= 29) {
+                matchedMemoryKeys = [];
+                localStorage.setItem(MEMORY_MATCHED_KEY, JSON.stringify([]));
+                localStorage.removeItem(MEMORY_LAYOUT_KEY);
+            }
+
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(completedDays));
+            saveCloudData();
+            renderTracker();
+            alert(`Прогресс сброшен с ${dayToReset}-го дня!`);
+        } else {
+            alert("Пожалуйста, введите корректный номер дня от 1 до 30.");
+        }
     }
 }
 
@@ -756,6 +846,8 @@ function updateProgress() {
 
     if (current === total) {
         document.getElementById('certificate-block').style.display = 'block';
+    } else {
+        document.getElementById('certificate-block').style.display = 'none';
     }
 }
 
@@ -764,7 +856,7 @@ function playAudio(dayNumber) {
     audio.play().catch(() => alert(`Аудио файл audio${dayNumber}.mp3 пока не добавлен в папку.`));
 }
 
-// --- 4. МЕМОРИ (ДЕНЬ 29) С СОХРАНЕНИЕМ СОСТОЯНИЯ В LOCALSTORAGE ---
+// --- 5. МЕМОРИ (ДЕНЬ 29) ---
 let activeCards = [];
 
 function flipCard(card, imageSrc, wordKey) {
@@ -779,11 +871,10 @@ function flipCard(card, imageSrc, wordKey) {
                     activeCards[0].card.classList.add('matched');
                     activeCards[1].card.classList.add('matched');
 
-                    // Сохраняем угаданную пару в памяти
-                    let matchedKeys = JSON.parse(localStorage.getItem(MEMORY_MATCHED_KEY)) || [];
-                    if (!matchedKeys.includes(wordKey)) {
-                        matchedKeys.push(wordKey);
-                        localStorage.setItem(MEMORY_MATCHED_KEY, JSON.stringify(matchedKeys));
+                    if (!matchedMemoryKeys.includes(wordKey)) {
+                        matchedMemoryKeys.push(wordKey);
+                        localStorage.setItem(MEMORY_MATCHED_KEY, JSON.stringify(matchedMemoryKeys));
+                        saveCloudData();
                     }
                 } else {
                     activeCards[0].card.classList.remove('flipped');
@@ -809,7 +900,6 @@ function shuffleArray(array) {
 function renderMemoryGameHtml() {
     let memoryItems = JSON.parse(localStorage.getItem(MEMORY_LAYOUT_KEY));
 
-    // Если порядок ещё не сохранялся (первый запуск) — перемешиваем и фиксируем
     if (!memoryItems || memoryItems.length === 0) {
         const baseItems = [
             { key: 'YELLOW', img: 'yellow_pic.jpg' },
@@ -823,12 +913,11 @@ function renderMemoryGameHtml() {
         ];
         memoryItems = shuffleArray(baseItems);
         localStorage.setItem(MEMORY_LAYOUT_KEY, JSON.stringify(memoryItems));
+        saveCloudData();
     }
 
-    const matchedKeys = JSON.parse(localStorage.getItem(MEMORY_MATCHED_KEY)) || [];
-
     const cardsHtml = memoryItems.map(item => {
-        const isMatched = matchedKeys.includes(item.key);
+        const isMatched = matchedMemoryKeys.includes(item.key);
         if (isMatched) {
             return `<div class="memory-card flipped matched"><img src="${item.img}" alt="${item.key}" style="width:100%; height:100%; object-fit:cover; border-radius:8px; pointer-events:none;"></div>`;
         } else {
@@ -839,7 +928,7 @@ function renderMemoryGameHtml() {
     return `<div class="memory-grid">${cardsHtml}</div>`;
 }
 
-// --- 5. РАСКРАСКА (ДЕНЬ 30) ---
+// --- 6. РАСКРАСКА (ДЕНЬ 30) ---
 function renderColoringHtml() {
     return `
         <div style="text-align:center; margin-bottom:12px;">
@@ -859,32 +948,15 @@ function openAndPrintColoring() {
             <html lang="ru">
             <head>
                 <meta charset="UTF-8">
-                <title>Раскраска — ${childName}</title>
+                <title>Раскраска — ${displayName}</title>
                 <style>
-                    body {
-                        margin: 0;
-                        padding: 0;
-                        display: flex;
-                        justify-content: center;
-                        align-items: center;
-                        min-height: 100vh;
-                        background: #FFFFFF;
-                    }
-                    img {
-                        max-width: 95vw;
-                        max-height: 95vh;
-                        object-fit: contain;
-                    }
-                    @media print {
-                        body { background: #FFFFFF; }
-                        img { max-width: 100%; max-height: 100%; }
-                    }
+                    body { margin: 0; padding: 0; display: flex; justify-content: center; align-items: center; min-height: 100vh; background: #FFFFFF; }
+                    img { max-width: 95vw; max-height: 95vh; object-fit: contain; }
+                    @media print { body { background: #FFFFFF; } img { max-width: 100%; max-height: 100%; } }
                 </style>
             </head>
             <body>
-                <img src="dog_coloring.png" 
-                     onload="window.print();" 
-                     onerror="this.src='https://via.placeholder.com/600x800?text=dog_coloring.png'; setTimeout(() => window.print(), 500);">
+                <img src="dog_coloring.png" onload="window.print();" onerror="this.src='https://via.placeholder.com/600x800?text=dog_coloring.png'; setTimeout(() => window.print(), 500);">
             </body>
             </html>
         `);
@@ -898,11 +970,12 @@ function copyPersonalLink() {
 }
 
 function generateCertificate() {
-    alert(`Сертификат для ${childName} генерируется...`);
+    alert(`Сертификат для ${displayName} генерируется...`);
 }
 
-// Запуск
+// Запуск отрисовки
 renderTracker();
+loadCloudData();
 </script>
 </body>
 </html>
