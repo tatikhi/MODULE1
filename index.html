@@ -581,7 +581,11 @@ const childName = (rawName && rawName.trim() !== '') ? decodeURIComponent(rawNam
 document.getElementById('child-name-display').textContent = `${childName}, 5 лет`;
 document.title = `Трекер — ${childName}`;
 
+// КЛЮЧИ ХРАНЕНИЯ ДЛЯ LOCALSTORAGE
 const STORAGE_KEY = `tracker_progress_${childName}`;
+const MEMORY_LAYOUT_KEY = `tracker_memory_layout_${childName}`;
+const MEMORY_MATCHED_KEY = `tracker_memory_matched_${childName}`;
+
 let completedDays = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
 
 // --- 3. ОТРИСОВКА ТРЕКЕРА ---
@@ -760,7 +764,7 @@ function playAudio(dayNumber) {
     audio.play().catch(() => alert(`Аудио файл audio${dayNumber}.mp3 пока не добавлен в папку.`));
 }
 
-// --- 4. МЕМОРИ (ДЕНЬ 29) С 8 УНИКАЛЬНЫМИ КАРТИНКАМИ И СЛУЧАЙНЫМ ПЕРЕМЕШИВАНИЕМ ---
+// --- 4. МЕМОРИ (ДЕНЬ 29) С СОХРАНЕНИЕМ СОСТОЯНИЯ В LOCALSTORAGE ---
 let activeCards = [];
 
 function flipCard(card, imageSrc, wordKey) {
@@ -774,6 +778,13 @@ function flipCard(card, imageSrc, wordKey) {
                 if (activeCards[0].wordKey === activeCards[1].wordKey) {
                     activeCards[0].card.classList.add('matched');
                     activeCards[1].card.classList.add('matched');
+
+                    // Сохраняем угаданную пару в памяти
+                    let matchedKeys = JSON.parse(localStorage.getItem(MEMORY_MATCHED_KEY)) || [];
+                    if (!matchedKeys.includes(wordKey)) {
+                        matchedKeys.push(wordKey);
+                        localStorage.setItem(MEMORY_MATCHED_KEY, JSON.stringify(matchedKeys));
+                    }
                 } else {
                     activeCards[0].card.classList.remove('flipped');
                     activeCards[1].card.classList.remove('flipped');
@@ -796,29 +807,34 @@ function shuffleArray(array) {
 }
 
 function renderMemoryGameHtml() {
-    const memoryItems = [
-        // Пара 1: Жёлтый (иллюстрация + карточка со словом)
-        { key: 'YELLOW', img: 'yellow_pic.jpg' },
-        { key: 'YELLOW', img: 'card_yellow.jpg' },
+    let memoryItems = JSON.parse(localStorage.getItem(MEMORY_LAYOUT_KEY));
 
-        // Пара 2: Бежать (иллюстрация + карточка со словом)
-        { key: 'RUN', img: 'run_pic.jpg' },
-        { key: 'RUN', img: 'card_run.jpg' },
+    // Если порядок ещё не сохранялся (первый запуск) — перемешиваем и фиксируем
+    if (!memoryItems || memoryItems.length === 0) {
+        const baseItems = [
+            { key: 'YELLOW', img: 'yellow_pic.jpg' },
+            { key: 'YELLOW', img: 'card_yellow.jpg' },
+            { key: 'RUN', img: 'run_pic.jpg' },
+            { key: 'RUN', img: 'card_run.jpg' },
+            { key: 'HANDS', img: 'hands_pic.jpg' },
+            { key: 'HANDS', img: 'card_hands.jpg' },
+            { key: 'TIGER', img: 'tiger_pic.jpg' },
+            { key: 'TIGER', img: 'card_tiger.jpg' }
+        ];
+        memoryItems = shuffleArray(baseItems);
+        localStorage.setItem(MEMORY_LAYOUT_KEY, JSON.stringify(memoryItems));
+    }
 
-        // Пара 3: Руки (иллюстрация + карточка со словом)
-        { key: 'HANDS', img: 'hands_pic.jpg' },
-        { key: 'HANDS', img: 'card_hands.jpg' },
+    const matchedKeys = JSON.parse(localStorage.getItem(MEMORY_MATCHED_KEY)) || [];
 
-        // Пара 4: Тигр (иллюстрация + карточка со словом)
-        { key: 'TIGER', img: 'tiger_pic.jpg' },
-        { key: 'TIGER', img: 'card_tiger.jpg' }
-    ];
-
-    const shuffled = shuffleArray(memoryItems);
-
-    const cardsHtml = shuffled.map(item => 
-        `<div class="memory-card" onclick="flipCard(this, '${item.img}', '${item.key}')">${svgQuestionCard}</div>`
-    ).join('');
+    const cardsHtml = memoryItems.map(item => {
+        const isMatched = matchedKeys.includes(item.key);
+        if (isMatched) {
+            return `<div class="memory-card flipped matched"><img src="${item.img}" alt="${item.key}" style="width:100%; height:100%; object-fit:cover; border-radius:8px; pointer-events:none;"></div>`;
+        } else {
+            return `<div class="memory-card" onclick="flipCard(this, '${item.img}', '${item.key}')">${svgQuestionCard}</div>`;
+        }
+    }).join('');
 
     return `<div class="memory-grid">${cardsHtml}</div>`;
 }
