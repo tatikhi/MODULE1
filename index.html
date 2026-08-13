@@ -1036,9 +1036,8 @@ function openAndPrintColoring() {
     }
 }
 
-// --- 6. ГЕНЕРАЦИЯ СЕРТИФИКАТА С СИНХРОННЫМ ОТКРЫТИЕМ ОКНА ---
+// --- 6. ГЕНЕРАЦИЯ СЕРТИФИКАТА С ТОЧНЫМИ ОТСТУПАМИ И 75% РАЗМЕРОМ ---
 function generateCertificate() {
-    // 1. СИНХРОННО открываем вкладку по клику (обход блокировщика окон браузера)
     const win = window.open('', '_blank');
     if (!win) {
         alert('Пожалуйста, разрешите всплывающие окна для этого сайта в настройках браузера.');
@@ -1084,51 +1083,51 @@ function generateCertificate() {
 
     tempDiv.innerHTML = `
         <div style="
-            width: 635px;
-            height: 898px;
+            width: 615px;
+            height: 870px;
             background-color: #FFFFFF;
             background-image: url('data:image/svg+xml,%3Csvg width=\'100\' height=\'100\' viewBox=\'0 0 100 100\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cpath d=\'M20 35L22.5 42.5H30L24 47L26.5 54.5L20 50L13.5 54.5L16 47L10 42.5H17.5L20 35Z\' fill=\'%23F1C40F\' fill-opacity=\'0.25\'/%3E%3Cpath d=\'M75 20L76.5 24.5H81L77.5 27L79 31.5L75 28.5L71 31.5L72.5 27L69 24.5H73.5L75 20Z\' fill=\'%23F1C40F\' fill-opacity=\'0.3\'/%3E%3Cpath d=\'M80 75L81.5 79.5H86L82.5 82L84 86.5L80 83.5L76 86.5L77.5 82L74 79.5H78.5L80 75Z\' fill=\'%23F1C40F\' fill-opacity=\'0.25\'/%3E%3Cpath d=\'M25 70L26.5 74.5H31L27.5 77L29 81.5L25 78.5L21 81.5L22.5 77L19 74.5H23.5L25 70Z\' fill=\'%23F1C40F\' fill-opacity=\'0.3\'/%3E%3C/svg%3E');
             background-size: 110px 110px;
             border-radius: 28px;
-            padding: 30px 45px;
+            padding: 16px 35px 12px 35px;
             box-shadow: 0 20px 45px rgba(0, 0, 0, 0.15);
             border: 6px solid #68C4C6;
             text-align: center;
             display: flex;
             flex-direction: column;
-            justify-content: space-evenly;
+            justify-content: space-between;
             align-items: center;
             font-family: 'Nunito', sans-serif;
             box-sizing: border-box;
             position: relative;
         ">
-            <!-- ГРУППА 1: ШАПКА -->
+            <!-- 1. ШАПКА И КУБОК (УВЕЛИЧЕН НА 100%, 110px) -->
             <div style="width: 100%; display: flex; flex-direction: column; align-items: center;">
-                <svg style="width: 55px; height: 55px; fill: #F1C40F; margin-bottom: 6px;" viewBox="0 0 24 24">
+                <svg style="width: 110px; height: 110px; fill: #F1C40F; margin-bottom: 2px;" viewBox="0 0 24 24">
                     <path d="M19 5h-2V3H7v2H5c-1.1 0-2 .9-2 2v1c0 2.55 1.92 4.63 4.39 4.94A5.01 5.01 0 0011 15.9V18H8v2h8v-2h-3v-2.1c2.12-.39 3.79-2.02 4.39-4.14C19.08 11.63 21 9.55 21 7V5c0-1.1-.9-2-2-2zM5 8V7h2v3.82C5.84 10.4 5 9.3 5 8zm14 0c0 1.3-.84 2.4-2 2.82V7h2v1z"/>
                     <path d="M3.5 1.5l.5 1.2 1.2.5-1.2.5-.5 1.2-.5-1.2-1.2-.5 1.2-.5z" fill="#F1C40F"/>
                     <path d="M20.5 1.5l.5 1.2 1.2.5-1.2.5-.5 1.2-.5-1.2-1.2-.5 1.2-.5z" fill="#F1C40F"/>
                 </svg>
-                <div style="width: 100%; font-size: 28px; font-weight: 900; color: #50A3A6; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 4px; text-align: center;">СЕРТИФИКАТ ПОБЕДИТЕЛЯ</div>
-                <div style="font-size: 14px; font-weight: 700; color: #7F8C8D; text-align: center;">За прохождение марафона английского языка на 30 дней!</div>
+                <div style="width: 100%; font-size: 26px; font-weight: 900; color: #50A3A6; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 2px; text-align: center;">СЕРТИФИКАТ ПОБЕДИТЕЛЯ</div>
+                <div style="font-size: 13px; font-weight: 700; color: #7F8C8D; text-align: center;">За прохождение марафона английского языка на 30 дней!</div>
             </div>
 
-            <!-- ГРУППА 2: АВАТАР ЛИСЕНКА -->
-            <div style="display: flex; justify-content: center; align-items: center;">
-                <img src="fox_certificate.png" crossorigin="anonymous" style="width: 135px; height: 135px; background: #FFFFFF; border-radius: 50%; border: 4px solid #68C4C6; object-fit: cover;" onerror="this.outerHTML='<div style=\'width:135px;height:135px;background:#fff;border-radius:50%;border:4px solid #68C4C6;display:flex;align-items:center;justify-content:center;font-size:50px;\'>🦊🏆</div>'">
+            <!-- 2. АВАТАР ЛИСЕНКА (С ПОДТЯНУТЫМ ОТСТУПОМ) -->
+            <div style="display: flex; justify-content: center; align-items: center; margin: 4px 0;">
+                <img src="fox_certificate.png" crossorigin="anonymous" style="width: 120px; height: 120px; background: #FFFFFF; border-radius: 50%; border: 4px solid #68C4C6; object-fit: cover;" onerror="this.outerHTML='<div style=\'width:120px;height:120px;background:#fff;border-radius:50%;border:4px solid #68C4C6;display:flex;align-items:center;justify-content:center;font-size:45px;\'>🦊🏆</div>'">
             </div>
 
-            <!-- ГРУППА 3: РАМКА С ДАННЫМИ (СВЕТЛО-БИРЮЗОВЫЙ ФОН) -->
-            <div style="width: 100%; padding: 22px 18px; background: rgba(104, 196, 198, 0.15); border-radius: 20px; border: 2px dashed #68C4C6; text-align: center; box-sizing: border-box;">
-                <div style="font-size: 15px; font-weight: 700; color: #5C4A28; margin-bottom: 8px;">ПОЛУЧАЕТ:</div>
-                <div style="font-size: 32px; font-weight: 900; color: #2C3E50; border-bottom: 4px solid #50A3A6; width: 100%; margin: 0 auto 12px auto; padding-bottom: 4px; letter-spacing: 1px; display: flex; align-items: center; justify-content: center;">${displayName} (${childAge} ${ageWord})</div>
-                <div style="font-size: 16px; font-weight: 800; color: #1A3636; line-height: 1.4; margin-bottom: 12px;">За упорство, отличную память, улыбку<br>и успешное выполнение всех заданий! 🌟</div>
-                <div style="font-size: 13px; font-weight: 800; color: #557A7B; text-align: right; width: 100%; padding-right: 5px;">${currentMonth}, ${currentYear} года</div>
+            <!-- 3. РАМКА С ДАННЫМИ -->
+            <div style="width: 100%; padding: 14px 16px; background: rgba(104, 196, 198, 0.15); border-radius: 18px; border: 2px dashed #68C4C6; text-align: center; box-sizing: border-box; margin-bottom: 4px;">
+                <div style="font-size: 14px; font-weight: 700; color: #5C4A28; margin-bottom: 4px;">ПОЛУЧАЕТ:</div>
+                <div style="font-size: 28px; font-weight: 900; color: #2C3E50; border-bottom: 3px solid #50A3A6; width: 100%; margin: 0 auto 8px auto; padding-bottom: 2px; letter-spacing: 1px; display: flex; align-items: center; justify-content: center;">${displayName} (${childAge} ${ageWord})</div>
+                <div style="font-size: 15px; font-weight: 800; color: #1A3636; line-height: 1.3; margin-bottom: 8px;">За упорство, отличную память, улыбку<br>и успешное выполнение всех заданий! 🌟</div>
+                <div style="font-size: 12px; font-weight: 800; color: #557A7B; text-align: right; width: 100%; padding-right: 5px;">${currentMonth}, ${currentYear} года</div>
             </div>
 
-            <!-- НИЖНИЙ КОПИРАЙТ (ВПРИТЫК СНИЗУ) -->
-            <div style="position: absolute; bottom: 10px; left: 20px; right: 20px; text-align: center;">
-                <div style="font-size: 10px; color: #95A5A6;">2026 [@tatikhi]. Все права защищены. Материалы предназначены исключительно для индивидуального личного использования.</div>
+            <!-- 4. НИЖНИЙ КОПИРАЙТ -->
+            <div style="width: 100%; text-align: center; padding-bottom: 2px;">
+                <div style="font-size: 9px; color: #95A5A6;">2026 [@tatikhi]. Все права защищены. Материалы предназначены исключительно для индивидуального личного использования.</div>
             </div>
         </div>
     `;
@@ -1157,13 +1156,11 @@ function generateCertificate() {
                 <style>
                     body { margin: 0; background: #2C3E50; display: flex; flex-direction: column; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; font-family: 'Nunito', sans-serif; }
                     .hint { color: #FFF; margin-bottom: 15px; font-size: 15px; font-weight: 700; text-align: center; }
-                    .print-btn { background: #68C4C6; color: #1A3636; border: none; padding: 10px 20px; border-radius: 10px; font-weight: 800; cursor: pointer; margin-bottom: 15px; font-size: 14px; }
                     img { max-width: 100%; height: auto; box-shadow: 0 10px 30px rgba(0,0,0,0.5); border-radius: 12px; }
                 </style>
             </head>
             <body>
-                <div class="hint">Нажмите и удерживайте картинку для сохранения, либо нажмите кнопку ниже для печати 💾</div>
-                <button class="print-btn" onclick="window.print()">🖨️ Печать / Сохранить в PDF</button>
+                <div class="hint">Нажмите и удерживайте картинку, чтобы сохранить её на устройство 💾</div>
                 <img src="${dataUrl}" alt="Сертификат победителя">
             </body>
             </html>
