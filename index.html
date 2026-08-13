@@ -1039,7 +1039,7 @@ function openAndPrintColoring() {
     }
 }
 
-// --- 6. ГЕНЕРАЦИЯ СЕРТИФИКАТА (ФОРМАТ А4 С ДАТОЙ ВНИЗУ СПРАВА И РАМКОЙ) ---
+// --- 6. ГЕНЕРАЦИЯ СЕРТИФИКАТА (С АВАТАРОМ И ПАТТЕРНОМ ИЗ ЗВЕЗД) ---
 function generateCertificate() {
     const now = new Date();
     const months = [
@@ -1087,59 +1087,99 @@ function generateCertificate() {
                         display: flex;
                         justify-content: center;
                         align-items: center;
+                        overflow: hidden;
                     }
 
                     .certificate-container {
                         width: 190mm;
-                        height: 277mm;
+                        height: 268mm;
                         background: #FFFFFF;
                         border-radius: 28px;
-                        padding: 50px 40px;
-                        box-shadow: 0 20px 45px rgba(0, 0, 0, 0.15); /* Размытая тень */
+                        padding: 35px 35px;
+                        box-shadow: 0 20px 45px rgba(0, 0, 0, 0.15);
                         border: 6px solid var(--turquoise-accent);
                         text-align: center;
                         display: flex;
                         flex-direction: column;
                         justify-content: space-between;
+                        position: relative;
+                        overflow: hidden;
                     }
 
-                    .cert-header { margin-top: 10px; }
+                    /* ПОЛУПРОЗРАЧНЫЙ ФОНОВЫЙ ПАТТЕРН ИЗ ЗВЕЗД ВНУТРИ СЕРТИФИКАТА */
+                    .certificate-container::before {
+                        content: "";
+                        position: absolute;
+                        top: 0;
+                        left: 0;
+                        width: 100%;
+                        height: 100%;
+                        background-image: url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z' fill='%2368C4C6' fill-opacity='0.1'/%3E%3C/svg%3E");
+                        background-size: 70px 70px;
+                        pointer-events: none;
+                        z-index: 0;
+                    }
+
+                    .cert-header, .cert-avatar-wrapper, .cert-body, .cert-footer-info {
+                        position: relative;
+                        z-index: 1;
+                    }
+
+                    .cert-header { margin-top: 5px; }
                     .trophy-icon {
-                        width: 90px; height: 90px; fill: #F1C40F;
+                        width: 70px; height: 70px; fill: #F1C40F;
                         filter: drop-shadow(0 4px 8px rgba(241, 196, 15, 0.4));
-                        margin-bottom: 15px;
+                        margin-bottom: 8px;
                     }
                     .cert-title {
-                        font-size: 34px; font-weight: 900; color: var(--header-dark);
-                        text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 8px;
+                        font-size: 30px; font-weight: 900; color: var(--header-dark);
+                        text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 6px;
                     }
-                    .cert-subtitle { font-size: 18px; font-weight: 700; color: #7F8C8D; }
+                    .cert-subtitle { font-size: 16px; font-weight: 700; color: #7F8C8D; }
 
-                    /* НОВАЯ РАМКА С ИМЕНЕМ (СВЕТЛО-БИРЮЗОВАЯ С ПУНКТИРОМ) */
-                    .cert-body {
-                        margin: 20px 0; 
-                        padding: 40px 25px; 
-                        background: rgba(104, 196, 198, 0.1); /* Полупрозрачный бирюзовый фон */
-                        border-radius: 20px; 
-                        border: 2px dashed var(--turquoise-accent); /* Пунктирная линия */
+                    /* АВАТАР ЛИСЕНКА С КУБКОМ МЕЖДУ ШАПКОЙ И РАМКОЙ */
+                    .cert-avatar-wrapper {
+                        display: flex;
+                        justify-content: center;
+                        margin: 10px 0;
                     }
-                    .cert-text-to { font-size: 18px; font-weight: 700; color: var(--soft-dark-yellow); margin-bottom: 15px; }
+                    .fox-avatar-cert {
+                        width: 68px;
+                        height: 68px;
+                        background: #FFFFFF;
+                        border-radius: 50%;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+                        border: 3px solid var(--turquoise-accent);
+                        object-fit: cover;
+                    }
+
+                    /* РАМКА С ИМЕНЕМ (СВЕТЛО-БИРЮЗОВАЯ С ПУНКТИРОМ) */
+                    .cert-body {
+                        margin: 10px 0; 
+                        padding: 30px 20px; 
+                        background: rgba(104, 196, 198, 0.12);
+                        border-radius: 20px; 
+                        border: 2px dashed var(--turquoise-accent);
+                    }
+                    .cert-text-to { font-size: 17px; font-weight: 700; color: var(--soft-dark-yellow); margin-bottom: 12px; }
                     
                     .cert-name-line {
-                        font-size: 38px; font-weight: 900; color: var(--header-text-unified);
-                        border-bottom: 4px solid var(--header-dark); width: 90%; margin: 0 auto 25px auto;
-                        padding-bottom: 8px; letter-spacing: 1px;
+                        font-size: 36px; font-weight: 900; color: var(--header-text-unified);
+                        border-bottom: 4px solid var(--header-dark); width: 85%; margin: 0 auto 20px auto;
+                        padding-bottom: 6px; letter-spacing: 1px;
                         display: flex; align-items: center; justify-content: center;
                     }
 
                     .cert-description { 
-                        font-size: 20px; font-weight: 800; color: var(--btn-text-dark); line-height: 1.6; 
-                        margin-bottom: 25px;
+                        font-size: 18px; font-weight: 800; color: var(--btn-text-dark); line-height: 1.5; 
+                        margin-bottom: 20px;
                     }
 
-                    /* ДАТА СПРАВА ВНИЗУ РАМКИ */
                     .cert-date-right {
-                        font-size: 15px; 
+                        font-size: 14px; 
                         font-weight: 800; 
                         color: #557A7B; 
                         text-align: right; 
@@ -1147,8 +1187,8 @@ function generateCertificate() {
                         padding-right: 10px;
                     }
 
-                    .cert-footer-info { margin-bottom: 10px; }
-                    .copyright { font-size: 12px; color: #95A5A6; }
+                    .cert-footer-info { margin-bottom: 5px; }
+                    .copyright { font-size: 11px; color: #95A5A6; }
 
                     @media print {
                         body {
@@ -1164,7 +1204,7 @@ function generateCertificate() {
                             max-width: none;
                             max-height: none;
                             border-radius: 0;
-                            padding: 40px;
+                            padding: 35mm 20mm;
                         }
                     }
                 </style>
@@ -1179,6 +1219,10 @@ function generateCertificate() {
                         </svg>
                         <div class="cert-title">СЕРТИФИКАТ ПОБЕДИТЕЛЯ</div>
                         <div class="cert-subtitle">За прохождение марафона английского языка на 30 дней!</div>
+                    </div>
+
+                    <div class="cert-avatar-wrapper">
+                        <img src="fox_certificate.png" alt="Лисенок с кубком" class="fox-avatar-cert" onerror="this.outerHTML='<div class=\'fox-avatar-cert\' style=\'font-size:28px;\'>🦊🏆</div>'">
                     </div>
 
                     <div class="cert-body">
