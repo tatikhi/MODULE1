@@ -572,7 +572,7 @@
     <!-- DAYS CONTAINER -->
     <div id="days-container"></div>
 
-    <!-- FOOTER (КНОПКА СЕРТИФИКАТА ТЕПЕРЬ ВИДИМА ВСЕГДА) -->
+    <!-- FOOTER (КНОПКА СЕРТИФИКАТА ВИДИМА ВСЕГДА) -->
     <div class="footer">
         <div id="certificate-block" style="margin-bottom: 20px;">
             <button class="btn-certificate" onclick="generateCertificate()">
@@ -1036,8 +1036,32 @@ function openAndPrintColoring() {
     }
 }
 
-// --- 6. ГЕНЕРАЦИЯ СЕРТИФИКАТА С ФОЛЛБЕКОМ ---
+// --- 6. ГЕНЕРАЦИЯ СЕРТИФИКАТА С СИНХРОННЫМ ОТКРЫТИЕМ ОКНА ---
 function generateCertificate() {
+    // 1. СИНХРОННО открываем вкладку по клику (обход блокировщика окон браузера)
+    const win = window.open('', '_blank');
+    if (!win) {
+        alert('Пожалуйста, разрешите всплывающие окна для этого сайта в настройках браузера.');
+        return;
+    }
+
+    win.document.write(`
+        <!DOCTYPE html>
+        <html lang="ru">
+        <head>
+            <meta charset="UTF-8">
+            <title>Генерация сертификата...</title>
+            <style>
+                body { margin: 0; background: #2C3E50; display: flex; flex-direction: column; justify-content: center; align-items: center; min-height: 100vh; color: white; font-family: 'Nunito', sans-serif; }
+                .loader { font-size: 20px; font-weight: 700; }
+            </style>
+        </head>
+        <body>
+            <div class="loader">⏳ Создаём ваш именной сертификат...</div>
+        </body>
+        </html>
+    `);
+
     const now = new Date();
     const months = [
         "январь", "февраль", "март", "апрель", "май", "июнь",
@@ -1045,39 +1069,6 @@ function generateCertificate() {
     ];
     const currentMonth = months[now.getMonth()];
     const currentYear = now.getFullYear();
-
-    const openCertWindow = (imgDataUrl = null) => {
-        const win = window.open('', '_blank');
-        if (win) {
-            win.document.write(`
-                <!DOCTYPE html>
-                <html lang="ru">
-                <head>
-                    <meta charset="UTF-8">
-                    <title>Сертификат — ${displayName}</title>
-                    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
-                    <style>
-                        body { margin: 0; background: #2C3E50; display: flex; flex-direction: column; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; font-family: 'Nunito', sans-serif; }
-                        .hint { color: #FFF; margin-bottom: 15px; font-size: 15px; font-weight: 700; text-align: center; }
-                        .print-btn { background: #68C4C6; color: #1A3636; border: none; padding: 10px 20px; border-radius: 10px; font-weight: 800; cursor: pointer; margin-bottom: 15px; font-size: 14px; }
-                        img { max-width: 100%; height: auto; box-shadow: 0 10px 30px rgba(0,0,0,0.5); border-radius: 12px; }
-                    </style>
-                </head>
-                <body>
-                    <div class="hint">Нажмите и удерживайте картинку для сохранения, либо нажмите кнопку ниже для печати 💾</div>
-                    <button class="print-btn" onclick="window.print()">🖨️ Печать / Сохранить в PDF</button>
-                    ${imgDataUrl ? `<img src="${imgDataUrl}" alt="Сертификат победителя">` : '<p style="color:white; text-align:center;">Не удалось создать картинку автоматически, используйте печать выше.</p>'}
-                </body>
-                </html>
-            `);
-            win.document.close();
-        }
-    };
-
-    if (typeof html2canvas === 'undefined') {
-        openCertWindow(null);
-        return;
-    }
 
     const tempDiv = document.createElement('div');
     tempDiv.style.position = 'absolute';
@@ -1144,14 +1135,45 @@ function generateCertificate() {
 
     document.body.appendChild(tempDiv);
 
+    if (typeof html2canvas === 'undefined') {
+        document.body.removeChild(tempDiv);
+        win.alert("Библиотека html2canvas не загружена. Проверьте интернет-соединение.");
+        win.close();
+        return;
+    }
+
     html2canvas(tempDiv.firstElementChild, { scale: 2, useCORS: true, allowTaint: true }).then(canvas => {
         document.body.removeChild(tempDiv);
         const dataUrl = canvas.toDataURL('image/png');
-        openCertWindow(dataUrl);
+        
+        win.document.open();
+        win.document.write(`
+            <!DOCTYPE html>
+            <html lang="ru">
+            <head>
+                <meta charset="UTF-8">
+                <title>Сертификат — ${displayName}</title>
+                <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+                <style>
+                    body { margin: 0; background: #2C3E50; display: flex; flex-direction: column; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; font-family: 'Nunito', sans-serif; }
+                    .hint { color: #FFF; margin-bottom: 15px; font-size: 15px; font-weight: 700; text-align: center; }
+                    .print-btn { background: #68C4C6; color: #1A3636; border: none; padding: 10px 20px; border-radius: 10px; font-weight: 800; cursor: pointer; margin-bottom: 15px; font-size: 14px; }
+                    img { max-width: 100%; height: auto; box-shadow: 0 10px 30px rgba(0,0,0,0.5); border-radius: 12px; }
+                </style>
+            </head>
+            <body>
+                <div class="hint">Нажмите и удерживайте картинку для сохранения, либо нажмите кнопку ниже для печати 💾</div>
+                <button class="print-btn" onclick="window.print()">🖨️ Печать / Сохранить в PDF</button>
+                <img src="${dataUrl}" alt="Сертификат победителя">
+            </body>
+            </html>
+        `);
+        win.document.close();
     }).catch(err => {
         document.body.removeChild(tempDiv);
         console.error(err);
-        openCertWindow(null);
+        win.document.close();
+        alert("Не удалось сгенерировать сертификат. Ошибка в консоли.");
     });
 }
 
