@@ -323,9 +323,12 @@
             text-align: left;
         }
 
-        /* ЦЕНТРИРОВАНИЕ ЗАГОЛОВКОВ ДЛЯ 29 И 30 ДНЕЙ */
+        /* ЦЕНТРИРОВАНИЕ ДЛЯ 29 И 30 ДНЕЙ (АВАТАР + НАЗВАНИЕ) */
         .day-card.bonus-card .card-top-content {
-            justify-content: center;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            gap: 8px;
         }
         .day-card.bonus-card .day-title-text {
             text-align: center;
@@ -337,7 +340,7 @@
             border-top: 1px dashed #E2E8F0;
         }
 
-        /* БЛОК РЕКОМЕНДАЦИЙ РОДИТЕЛЯМ */
+        /* БЛОК РЕКОМЕНДАЦИЙ РОДИТЕЛЯМ (ОСТАЛСЯ СЛЕВА, КАК ЕСТЬ) */
         .parent-box {
             background: #FFF9E6;
             border-left: 4px solid #F1C40F;
@@ -582,16 +585,27 @@
     <!-- DAYS CONTAINER -->
     <div id="days-container"></div>
 
-    <!-- FOOTER (КНОПКА СЕРТИФИКАТА ВИДИМА ВСЕГДА) -->
+    <!-- FOOTER (КНОПКА СЕРТИФИКАТА И ВЫПАДАЮЩИЙ БЛОК) -->
     <div class="footer">
-        <div id="certificate-block" style="margin-bottom: 20px;">
-            <button class="btn-certificate" onclick="generateCertificate()">
+        <div id="certificate-block" style="margin-bottom: 10px;">
+            <button id="cert-btn" class="btn-certificate" onclick="generateCertificate()">
                 <svg class="svg-icon" viewBox="0 0 24 24"><path d="M5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82zM12 3L1 9l11 6 9-4.91V17h2V9L12 3z"/></svg>
                 СКАЧАТЬ ИМЕННОЙ СЕРТИФИКАТ
             </button>
         </div>
 
-        <div class="copyright">
+        <!-- ВЫПАДАЮЩИЙ БЛОК ПРЯМО НА СТРАНИЦЕ (СКРЫТ ДО КЛИКА) -->
+        <div id="certificate-preview-box" style="display: none; margin-top: 15px; background: #2C3E50; padding: 15px; border-radius: 16px; text-align: center; box-shadow: 0 10px 25px rgba(0,0,0,0.15);">
+            <div style="color: #FFF; margin-bottom: 10px; font-size: 13px; font-weight: 800; line-height: 1.4;">
+                👇 Зажмите картинку пальцем (или кликните правой кнопкой мыши), чтобы сохранить:
+            </div>
+            <img id="certificate-img-result" src="" alt="Сертификат победителя" style="width: 100%; max-width: 450px; height: auto; border-radius: 12px; box-shadow: 0 5px 15px rgba(0,0,0,0.3); display: block; margin: 0 auto 12px auto; -webkit-touch-callout: default;">
+            <a id="certificate-download-link" href="" download="Certificate.png" style="display: inline-block; background: var(--pastel-green); color: var(--btn-text-dark); padding: 10px 20px; border-radius: 10px; font-weight: 900; text-decoration: none; font-size: 14px; box-shadow: 0 4px 10px rgba(92, 219, 149, 0.3);">
+                💾 СКАЧАТЬ ФАЙЛ НА УСТРОЙСТВО
+            </a>
+        </div>
+
+        <div class="copyright" style="margin-top: 25px;">
             2026 [@tatikhi]. Все права защищены. Материалы предназначены исключительно для индивидуального личного использования. Распространение, копирование и передача доступа третьим лицам запрещены.
         </div>
 
@@ -1046,30 +1060,11 @@ function openAndPrintColoring() {
     }
 }
 
-// --- 6. ГЕНЕРАЦИЯ СЕРТИФИКАТА ---
+// --- 6. ГЕНЕРАЦИЯ СЕРТИФИКАТА ПРЯМО НА СТРАНИЦЕ ---
 function generateCertificate() {
-    const win = window.open('', '_blank');
-    if (!win) {
-        alert('Пожалуйста, разрешите всплывающие окна для этого сайта в настройках браузера.');
-        return;
-    }
-
-    win.document.write(`
-        <!DOCTYPE html>
-        <html lang="ru">
-        <head>
-            <meta charset="UTF-8">
-            <title>Генерация сертификата...</title>
-            <style>
-                body { margin: 0; background: #2C3E50; display: flex; flex-direction: column; justify-content: center; align-items: center; min-height: 100vh; color: white; font-family: 'Nunito', sans-serif; }
-                .loader { font-size: 20px; font-weight: 700; }
-            </style>
-        </head>
-        <body>
-            <div class="loader">⏳ Создаём ваш именной сертификат...</div>
-        </body>
-        </html>
-    `);
+    const btn = document.getElementById('cert-btn');
+    btn.textContent = '⏳ Создаем сертификат...';
+    btn.style.pointerEvents = 'none';
 
     const now = new Date();
     const months = [
@@ -1089,14 +1084,13 @@ function generateCertificate() {
     tempDiv.style.display = 'flex';
     tempDiv.style.justifyContent = 'center';
     tempDiv.style.alignItems = 'center';
-    tempDiv.style.position = 'relative';
-    tempDiv.style.overflow = 'hidden';
 
     tempDiv.innerHTML = `
-        <!-- РАМКА СЕРТИФИКАТА С ФОРМАТОМ А4 -->
         <div style="
             width: 580px;
+            min-width: 580px;
             height: 840px;
+            min-height: 840px;
             background-color: #FFFFFF;
             border-radius: 28px;
             padding: 24px 35px 20px 35px;
@@ -1110,37 +1104,28 @@ function generateCertificate() {
             font-family: 'Nunito', sans-serif;
             box-sizing: border-box;
             position: relative;
-            z-index: 1;
-            overflow: hidden;
         ">
-            <!-- СОДЕРЖИМОЕ СЕРТИФИКАТА -->
-            <div style="position: relative; z-index: 1; width: 100%; display: flex; flex-direction: column; align-items: center;">
-                <!-- 1. ШАПКА И КУБОК -->
-                <div style="width: 100%; display: flex; flex-direction: column; align-items: center; margin-bottom: 4px;">
-                    <svg style="width: 110px; height: 110px; fill: #F1C40F; margin-bottom: 8px;" viewBox="0 0 24 24">
-                        <path d="M19 5h-2V3H7v2H5c-1.1 0-2 .9-2 2v1c0 2.55 1.92 4.63 4.39 4.94A5.01 5.01 0 0011 15.9V18H8v2h8v-2h-3v-2.1c2.12-.39 3.79-2.02 4.39-4.14C19.08 11.63 21 9.55 21 7V5c0-1.1-.9-2-2-2zM5 8V7h2v3.82C5.84 10.4 5 9.3 5 8zm14 0c0 1.3-.84 2.4-2 2.82V7h2v1z"/>
-                        <path d="M3.5 1.5l.5 1.2 1.2.5-1.2.5-.5 1.2-.5-1.2-1.2-.5 1.2-.5z" fill="#F1C40F"/>
-                        <path d="M20.5 1.5l.5 1.2 1.2.5-1.2.5-.5 1.2-.5-1.2-1.2-.5 1.2-.5z" fill="#F1C40F"/>
-                    </svg>
-                    <div style="width: 100%; font-size: 26px; font-weight: 900; color: #50A3A6; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 4px; text-align: center;">СЕРТИФИКАТ ПОБЕДИТЕЛЯ</div>
-                    <div style="font-size: 13px; font-weight: 700; color: #7F8C8D; text-align: center; margin-bottom: 22px;">За прохождение марафона английского языка на 30 дней!</div>
-                </div>
-
-                <!-- 2. АВАТАР ЛИСЕНКА -->
-                <div style="display: flex; justify-content: center; align-items: center; margin-bottom: 25px;">
-                    <img src="fox_certificate.png" crossorigin="anonymous" style="width: 120px; height: 120px; background: #FFFFFF; border-radius: 50%; border: 4px solid #68C4C6; object-fit: cover;" onerror="this.outerHTML='<div style=\'width:120px;height:120px;background:#fff;border-radius:50%;border:4px solid #68C4C6;display:flex;align-items:center;justify-content:center;font-size:45px;\'>🦊🏆</div>'">
-                </div>
-
-                <!-- 3. РАМКА С ДАННЫМИ: ЦВЕТА ПОДСТРОЕНЫ ПОД ВАШИ УКАЗАНИЯ -->
-                <div style="width: 100%; padding: 14px 16px; background: #D4F1F4; border-radius: 18px; border: 2px dashed #68C4C6; text-align: center; box-sizing: border-box; box-shadow: 0 4px 15px rgba(0,0,0,0.03);">
-                    <div style="font-size: 14px; font-weight: 700; color: #2C3E50; margin-bottom: 4px;">ПОЛУЧАЕТ:</div>
-                    <div style="font-size: 28px; font-weight: 900; color: #2C3E50; border-bottom: 3px solid #68C4C6; width: 100%; margin: 0 auto 8px auto; padding-bottom: 2px; letter-spacing: 1px; display: flex; align-items: center; justify-content: center;">${displayName} (${childAge} ${ageWord})</div>
-                    <div style="font-size: 15px; font-weight: 800; color: #1A3636; line-height: 1.3; margin-bottom: 8px;">За упорство, отличную память, улыбку<br>и успешное выполнение всех заданий! 🌟</div>
-                    <div style="font-size: 12px; font-weight: 800; color: #68C4C6; text-align: right; width: 100%; padding-right: 5px;">${currentMonth}, ${currentYear} года</div>
-                </div>
+            <div style="width: 100%; display: flex; flex-direction: column; align-items: center; margin-bottom: 4px;">
+                <svg style="width: 110px; height: 110px; fill: #F1C40F; margin-bottom: 8px;" viewBox="0 0 24 24">
+                    <path d="M19 5h-2V3H7v2H5c-1.1 0-2 .9-2 2v1c0 2.55 1.92 4.63 4.39 4.94A5.01 5.01 0 0011 15.9V18H8v2h8v-2h-3v-2.1c2.12-.39 3.79-2.02 4.39-4.14C19.08 11.63 21 9.55 21 7V5c0-1.1-.9-2-2-2zM5 8V7h2v3.82C5.84 10.4 5 9.3 5 8zm14 0c0 1.3-.84 2.4-2 2.82V7h2v1z"/>
+                    <path d="M3.5 1.5l.5 1.2 1.2.5-1.2.5-.5 1.2-.5-1.2-1.2-.5 1.2-.5z" fill="#F1C40F"/>
+                    <path d="M20.5 1.5l.5 1.2 1.2.5-1.2.5-.5 1.2-.5-1.2-1.2-.5 1.2-.5z" fill="#F1C40F"/>
+                </svg>
+                <div style="width: 100%; font-size: 26px; font-weight: 900; color: #50A3A6; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 4px; text-align: center;">СЕРТИФИКАТ ПОБЕДИТЕЛЯ</div>
+                <div style="font-size: 13px; font-weight: 700; color: #7F8C8D; text-align: center; margin-bottom: 22px;">За прохождение марафона английского языка на 30 дней!</div>
             </div>
 
-            <!-- 4. НИЖНИЙ КОПИРАЙТ -->
+            <div style="display: flex; justify-content: center; align-items: center; margin-bottom: 25px;">
+                <img src="fox_certificate.png" crossorigin="anonymous" style="width: 120px; height: 120px; background: #FFFFFF; border-radius: 50%; border: 4px solid #68C4C6; object-fit: cover;" onerror="this.outerHTML='<div style=\'width:120px;height:120px;background:#fff;border-radius:50%;border:4px solid #68C4C6;display:flex;align-items:center;justify-content:center;font-size:45px;\'>🦊🏆</div>'">
+            </div>
+
+            <div style="width: 100%; padding: 14px 16px; background: #D4F1F4; border-radius: 18px; border: 2px dashed #68C4C6; text-align: center; box-sizing: border-box; box-shadow: 0 4px 15px rgba(0,0,0,0.03);">
+                <div style="font-size: 14px; font-weight: 700; color: #2C3E50; margin-bottom: 4px;">ПОЛУЧАЕТ:</div>
+                <div style="font-size: 28px; font-weight: 900; color: #2C3E50; border-bottom: 3px solid #68C4C6; width: 100%; margin: 0 auto 8px auto; padding-bottom: 2px; letter-spacing: 1px; display: flex; align-items: center; justify-content: center;">${displayName} (${childAge} ${ageWord})</div>
+                <div style="font-size: 15px; font-weight: 800; color: #1A3636; line-height: 1.3; margin-bottom: 8px;">За упорство, отличную память, улыбку<br>и успешное выполнение всех заданий! 🌟</div>
+                <div style="font-size: 12px; font-weight: 800; color: #68C4C6; text-align: right; width: 100%; padding-right: 5px;">${currentMonth}, ${currentYear} года</div>
+            </div>
+
             <div style="width: 100%; text-align: center; margin-top: auto; padding-top: 15px;">
                 <div style="font-size: 9px; color: #95A5A6;">2026 [@tatikhi]. Все права защищены. Материалы предназначены исключительно для индивидуального личного использования.</div>
             </div>
@@ -1151,8 +1136,9 @@ function generateCertificate() {
 
     if (typeof html2canvas === 'undefined') {
         document.body.removeChild(tempDiv);
-        win.alert("Библиотека html2canvas не загружена. Проверьте интернет-соединение.");
-        win.close();
+        alert("Библиотека html2canvas не загружена.");
+        btn.textContent = 'СКАЧАТЬ ИМЕННОЙ СЕРТИФИКАТ';
+        btn.style.pointerEvents = 'auto';
         return;
     }
 
@@ -1160,33 +1146,26 @@ function generateCertificate() {
         document.body.removeChild(tempDiv);
         const dataUrl = canvas.toDataURL('image/png');
         
-        win.document.open();
-        win.document.write(`
-            <!DOCTYPE html>
-            <html lang="ru">
-            <head>
-                <meta charset="UTF-8">
-                <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                <title>Сертификат — ${displayName}</title>
-                <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
-                <style>
-                    body { margin: 0; background: #2C3E50; display: flex; flex-direction: column; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; font-family: 'Nunito', sans-serif; box-sizing: border-box; }
-                    .hint { color: #FFF; margin-bottom: 15px; font-size: 14px; font-weight: 700; text-align: center; }
-                    img { max-width: 100%; height: auto; width: 100%; max-width: 580px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); border-radius: 12px; display: block; }
-                </style>
-            </head>
-            <body>
-                <div class="hint">Нажмите и удерживайте картинку, чтобы сохранить её на устройство 💾</div>
-                <img src="${dataUrl}" alt="Сертификат победителя">
-            </body>
-            </html>
-        `);
-        win.document.close();
+        // Показываем блок прямо на странице
+        const previewBox = document.getElementById('certificate-preview-box');
+        const imgResult = document.getElementById('certificate-img-result');
+        const downloadLink = document.getElementById('certificate-download-link');
+
+        imgResult.src = dataUrl;
+        downloadLink.href = dataUrl;
+        downloadLink.download = `Certificate_${displayName}.png`;
+
+        previewBox.style.display = 'block';
+        previewBox.scrollIntoView({ behavior: 'smooth' });
+
+        btn.textContent = '🌟 СЕРТИФИКАТ ГОТОВ НИЖЕ';
+        btn.style.pointerEvents = 'auto';
     }).catch(err => {
         document.body.removeChild(tempDiv);
         console.error(err);
-        win.document.close();
-        alert("Не удалось сгенерировать сертификат. Ошибка в консоли.");
+        alert("Не удалось сгенерировать сертификат.");
+        btn.textContent = 'СКАЧАТЬ ИМЕННОЙ СЕРТИФИКАТ';
+        btn.style.pointerEvents = 'auto';
     });
 }
 
