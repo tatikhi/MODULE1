@@ -1039,7 +1039,7 @@ function openAndPrintColoring() {
     }
 }
 
-// --- 6. ГЕНЕРАЦИЯ СЕРТИФИКАТА (С АВАТАРОМ И ПАТТЕРНОМ ИЗ ЗВЕЗД) ---
+// --- 6. ГЕНЕРАЦИЯ СЕРТИФИКАТА (ФОРМАТ А4 80%, АВАТАР +250%, РАВНЫЕ ОТСТУПЫ, ЗВЕЗДЫ) ---
 function generateCertificate() {
     const now = new Date();
     const months = [
@@ -1079,7 +1079,6 @@ function generateCertificate() {
                         background-color: var(--bg-color);
                         background-image: url("data:image/svg+xml,%3Csvg width='70' height='70' viewBox='0 0 70 70' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='10' cy='10' r='5' fill='%233498db' opacity='0.22'/%3E%3Ccircle cx='50' cy='15' r='4' fill='%2368c4c6' opacity='0.3'/%3E%3Ccircle cx='60' cy='45' r='6' fill='%233498db' opacity='0.18'/%3E%3Ccircle cx='25' cy='55' r='4.5' fill='%2368c4c6' opacity='0.25'/%3E%3Ccircle cx='20' cy='32' r='2.5' fill='%233498db' opacity='0.2'/%3E%3Ccircle cx='55' cy='62' r='3' fill='%2368c4c6' opacity='0.22'/%3E%3C/svg%3E");
                         background-attachment: fixed;
-                        color: var(--header-text-unified);
                         width: 210mm;
                         height: 297mm;
                         min-height: 297mm;
@@ -1090,105 +1089,112 @@ function generateCertificate() {
                         overflow: hidden;
                     }
 
+                    /* РАЗМЕР РАМКИ 80% ОТ А4 (168мм x 237.6мм) */
                     .certificate-container {
-                        width: 190mm;
-                        height: 268mm;
-                        background: #FFFFFF;
+                        width: 168mm;
+                        height: 237.6mm;
+                        background-color: #FFFFFF;
+                        background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M20 35L22.5 42.5H30L24 47L26.5 54.5L20 50L13.5 54.5L16 47L10 42.5H17.5L20 35Z' fill='%23F1C40F' fill-opacity='0.25'/%3E%3Cpath d='M75 20L76.5 24.5H81L77.5 27L79 31.5L75 28.5L71 31.5L72.5 27L69 24.5H73.5L75 20Z' fill='%23F1C40F' fill-opacity='0.3'/%3E%3Cpath d='M80 75L81.5 79.5H86L82.5 82L84 86.5L80 83.5L76 86.5L77.5 82L74 79.5H78.5L80 75Z' fill='%23F1C40F' fill-opacity='0.25'/%3E%3Cpath d='M25 70L26.5 74.5H31L27.5 77L29 81.5L25 78.5L21 81.5L22.5 77L19 74.5H23.5L25 70Z' fill='%23F1C40F' fill-opacity='0.3'/%3E%3C/svg%3E");
+                        background-size: 110px 110px;
                         border-radius: 28px;
-                        padding: 35px 35px;
+                        padding: 25px 20px;
                         box-shadow: 0 20px 45px rgba(0, 0, 0, 0.15);
                         border: 6px solid var(--turquoise-accent);
                         text-align: center;
                         display: flex;
                         flex-direction: column;
                         justify-content: space-between;
+                        align-items: center;
                         position: relative;
                         overflow: hidden;
                     }
 
-                    /* ПОЛУПРОЗРАЧНЫЙ ФОНОВЫЙ ПАТТЕРН ИЗ ЗВЕЗД ВНУТРИ СЕРТИФИКАТА */
-                    .certificate-container::before {
-                        content: "";
-                        position: absolute;
-                        top: 0;
-                        left: 0;
-                        width: 100%;
-                        height: 100%;
-                        background-image: url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z' fill='%2368C4C6' fill-opacity='0.1'/%3E%3C/svg%3E");
-                        background-size: 70px 70px;
-                        pointer-events: none;
-                        z-index: 0;
+                    /* РАВНЫЕ ОТСТУПЫ ЧЕРЕЗ FLEX SPACE-BETWEEN */
+                    .cert-header { 
+                        width: 90%; 
+                        display: flex; 
+                        flex-direction: column; 
+                        align-items: center; 
                     }
-
-                    .cert-header, .cert-avatar-wrapper, .cert-body, .cert-footer-info {
-                        position: relative;
-                        z-index: 1;
-                    }
-
-                    .cert-header { margin-top: 5px; }
                     .trophy-icon {
-                        width: 70px; height: 70px; fill: #F1C40F;
-                        filter: drop-shadow(0 4px 8px rgba(241, 196, 15, 0.4));
-                        margin-bottom: 8px;
+                        width: 55px; height: 55px; fill: #F1C40F;
+                        filter: drop-shadow(0 3px 6px rgba(241, 196, 15, 0.4));
+                        margin-bottom: 4px;
                     }
                     .cert-title {
-                        font-size: 30px; font-weight: 900; color: var(--header-dark);
-                        text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 6px;
+                        width: 100%;
+                        font-size: 28px; 
+                        font-weight: 900; 
+                        color: var(--header-dark);
+                        text-transform: uppercase; 
+                        letter-spacing: 2px; 
+                        margin-bottom: 4px;
+                        text-align: center;
                     }
-                    .cert-subtitle { font-size: 16px; font-weight: 700; color: #7F8C8D; }
+                    .cert-subtitle { 
+                        font-size: 14px; 
+                        font-weight: 700; 
+                        color: #7F8C8D; 
+                        text-align: center;
+                    }
 
-                    /* АВАТАР ЛИСЕНКА С КУБКОМ МЕЖДУ ШАПКОЙ И РАМКОЙ */
                     .cert-avatar-wrapper {
                         display: flex;
                         justify-content: center;
-                        margin: 10px 0;
+                        align-items: center;
                     }
+                    /* УВЕЛИЧЕННЫЙ НА 250% АВАТАР */
                     .fox-avatar-cert {
-                        width: 68px;
-                        height: 68px;
+                        width: 145px;
+                        height: 145px;
                         background: #FFFFFF;
                         border-radius: 50%;
                         display: flex;
                         align-items: center;
                         justify-content: center;
-                        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-                        border: 3px solid var(--turquoise-accent);
+                        box-shadow: 0 4px 15px rgba(0,0,0,0.12);
+                        border: 4px solid var(--turquoise-accent);
                         object-fit: cover;
                     }
 
-                    /* РАМКА С ИМЕНЕМ (СВЕТЛО-БИРЮЗОВАЯ С ПУНКТИРОМ) */
+                    /* РАМКА С ИМЕНЕМ И ДАННЫМИ (БЛОКИРУЕТ ЗВЕЗДЫ НА ФОНЕ) */
                     .cert-body {
-                        margin: 10px 0; 
-                        padding: 30px 20px; 
-                        background: rgba(104, 196, 198, 0.12);
+                        width: 90%;
+                        padding: 22px 18px; 
+                        background: #FFFFFF; 
                         border-radius: 20px; 
                         border: 2px dashed var(--turquoise-accent);
+                        box-shadow: 0 4px 15px rgba(104, 196, 198, 0.15);
+                        text-align: center;
                     }
-                    .cert-text-to { font-size: 17px; font-weight: 700; color: var(--soft-dark-yellow); margin-bottom: 12px; }
+                    .cert-text-to { font-size: 15px; font-weight: 700; color: var(--soft-dark-yellow); margin-bottom: 8px; }
                     
                     .cert-name-line {
-                        font-size: 36px; font-weight: 900; color: var(--header-text-unified);
-                        border-bottom: 4px solid var(--header-dark); width: 85%; margin: 0 auto 20px auto;
-                        padding-bottom: 6px; letter-spacing: 1px;
+                        font-size: 32px; font-weight: 900; color: var(--header-text-unified);
+                        border-bottom: 4px solid var(--header-dark); width: 100%; margin: 0 auto 12px auto;
+                        padding-bottom: 4px; letter-spacing: 1px;
                         display: flex; align-items: center; justify-content: center;
                     }
 
                     .cert-description { 
-                        font-size: 18px; font-weight: 800; color: var(--btn-text-dark); line-height: 1.5; 
-                        margin-bottom: 20px;
+                        font-size: 16px; font-weight: 800; color: var(--btn-text-dark); line-height: 1.4; 
+                        margin-bottom: 12px;
                     }
 
                     .cert-date-right {
-                        font-size: 14px; 
+                        font-size: 13px; 
                         font-weight: 800; 
                         color: #557A7B; 
                         text-align: right; 
                         width: 100%;
-                        padding-right: 10px;
+                        padding-right: 5px;
                     }
 
-                    .cert-footer-info { margin-bottom: 5px; }
-                    .copyright { font-size: 11px; color: #95A5A6; }
+                    .cert-footer-info { 
+                        width: 90%;
+                        text-align: center; 
+                    }
+                    .copyright { font-size: 10px; color: #95A5A6; }
 
                     @media print {
                         body {
@@ -1204,7 +1210,7 @@ function generateCertificate() {
                             max-width: none;
                             max-height: none;
                             border-radius: 0;
-                            padding: 35mm 20mm;
+                            padding: 25mm 20mm;
                         }
                     }
                 </style>
@@ -1222,7 +1228,7 @@ function generateCertificate() {
                     </div>
 
                     <div class="cert-avatar-wrapper">
-                        <img src="fox_certificate.png" alt="Лисенок с кубком" class="fox-avatar-cert" onerror="this.outerHTML='<div class=\'fox-avatar-cert\' style=\'font-size:28px;\'>🦊🏆</div>'">
+                        <img src="fox_certificate.png" alt="Лисенок с кубком" class="fox-avatar-cert" onerror="this.outerHTML='<div class=\'fox-avatar-cert\' style=\'font-size:50px;\'>🦊🏆</div>'">
                     </div>
 
                     <div class="cert-body">
