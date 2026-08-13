@@ -341,7 +341,7 @@
             gap: 10px;
         }
 
-        /* ЦЕНТРИРОВАНИЕ ТЕКСТА ДЛЯ БОНУСНЫХ ДНЕЙ (КРОМЕ ПАМЯТКИ РОДИТЕЛЯМ) */
+        /* ЦЕНТРИРОВАНИЕ ТЕКСТА ДЛЯ БОНУСНЫХ ДНЕЙ */
         .bonus-centered-text {
             text-align: center;
             margin-bottom: 12px;
@@ -532,7 +532,7 @@
 
 <canvas id="confetti-canvas"></canvas>
 
-<div class="container">
+<div class="container" id="main-app-container">
     <div class="header">
         <div class="greeting-box">
             <img src="fox_avatar.png" alt="Лисенок" class="fox-avatar-top" onerror="this.outerHTML='<div class=\'fox-avatar-top\'>🦊</div>'">
@@ -1035,8 +1035,126 @@ function openAndPrintColoring() {
     }
 }
 
+// --- 6. ГЕНЕРАЦИЯ СЕРТИФИКАТА ---
 function generateCertificate() {
-    alert(`Сертификат для ${displayName} генерируется...`);
+    const certWindow = window.open('', '_blank');
+    if (certWindow) {
+        certWindow.document.write(`
+            <!DOCTYPE html>
+            <html lang="ru">
+            <head>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <title>Сертификат победителя — ${displayName}</title>
+                <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+                <style>
+                    :root {
+                        --header-dark: #50A3A6;
+                        --yellow-box: #FFF8D6;
+                        --yellow-border: #FFE680;
+                        --turquoise-accent: #68C4C6;
+                        --btn-text-dark: #1A3636;
+                        --header-text-unified: #2C3E50;
+                        --soft-dark-yellow: #5C4A28;
+                        --bg-color: #EBF5FB;
+                        --card-radius: 28px;
+                    }
+                    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Nunito', sans-serif; }
+                    body {
+                        background-color: var(--bg-color);
+                        color: var(--header-text-unified);
+                        padding: 20px 10px;
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        min-height: 100vh;
+                    }
+                    .certificate-container {
+                        width: 100%;
+                        max-width: 650px;
+                        background: #FFFFFF;
+                        border-radius: var(--card-radius);
+                        padding: 30px 25px;
+                        box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+                        border: 4px solid var(--turquoise-accent);
+                        text-align: center;
+                    }
+                    .cert-header { margin-bottom: 20px; }
+                    .trophy-icon {
+                        width: 70px; height: 70px; fill: #F1C40F;
+                        filter: drop-shadow(0 4px 8px rgba(241, 196, 15, 0.4));
+                        margin-bottom: 10px;
+                    }
+                    .cert-title {
+                        font-size: 26px; font-weight: 900; color: var(--header-dark);
+                        text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px;
+                    }
+                    .cert-subtitle { font-size: 15px; font-weight: 700; color: #7F8C8D; }
+                    .cert-body {
+                        margin: 25px 0; padding: 20px; background: var(--yellow-box);
+                        border-radius: 20px; border: 2px dashed var(--yellow-border);
+                    }
+                    .cert-text-to { font-size: 16px; font-weight: 700; color: var(--soft-dark-yellow); margin-bottom: 15px; }
+                    .cert-name-line {
+                        font-size: 32px; font-weight: 900; color: var(--header-text-unified);
+                        border-bottom: 4px solid var(--header-dark); width: 85%; margin: 0 auto 20px auto;
+                        padding-bottom: 5px; letter-spacing: 1px; min-height: 50px;
+                        display: flex; align-items: center; justify-content: center;
+                    }
+                    .cert-description { font-size: 16px; font-weight: 800; color: var(--btn-text-dark); line-height: 1.5; }
+                    .cert-footer { margin-top: 25px; display: flex; flex-direction: column; gap: 12px; align-items: center; }
+                    .btn-action {
+                        width: 100%; max-width: 300px; background: var(--turquoise-accent); color: var(--btn-text-dark);
+                        border: none; padding: 14px 20px; border-radius: 14px; font-weight: 800; font-size: 16px;
+                        cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px;
+                        box-shadow: 0 4px 12px rgba(104, 196, 198, 0.3); text-decoration: none;
+                    .svg-icon { width: 22px; height: 22px; fill: currentColor; flex-shrink: 0; }
+                    .copyright { font-size: 11px; color: #95A5A6; margin-top: 15px; }
+                    @media print {
+                        body { background: #FFFFFF; padding: 0; }
+                        .certificate-container { border: 4px solid #68C4C6 !important; box-shadow: none; max-width: 100%; width: 100%; }
+                        .no-print { display: none !important; }
+                    }
+                </style>
+            </head>
+            <body>
+                <div class="certificate-container">
+                    <div class="cert-header">
+                        <svg class="trophy-icon" viewBox="0 0 24 24">
+                            <path d="M19 5h-2V3H7v2H5c-1.1 0-2 .9-2 2v1c0 2.55 1.92 4.63 4.39 4.94A5.01 5.01 0 0011 15.9V18H8v2h8v-2h-3v-2.1c2.12-.39 3.79-2.02 4.39-4.14C19.08 11.63 21 9.55 21 7V5c0-1.1-.9-2-2-2zM5 8V7h2v3.82C5.84 10.4 5 9.3 5 8zm14 0c0 1.3-.84 2.4-2 2.82V7h2v1z"/>
+                            <path d="M3.5 1.5l.5 1.2 1.2.5-1.2.5-.5 1.2-.5-1.2-1.2-.5 1.2-.5z" fill="#F1C40F"/>
+                            <path d="M20.5 1.5l.5 1.2 1.2.5-1.2.5-.5 1.2-.5-1.2-1.2-.5 1.2-.5z" fill="#F1C40F"/>
+                        </svg>
+                        <div class="cert-title">СЕРТИФИКАТ ПОБЕДИТЕЛЯ</div>
+                        <div class="cert-subtitle">За прохождение марафона английского языка на 30 дней!</div>
+                    </div>
+
+                    <div class="cert-body">
+                        <div class="cert-text-to">ПОЛУЧАЕТ:</div>
+                        <div class="cert-name-line">${displayName} (${childAge} ${ageWord})</div>
+                        <div class="cert-description">
+                            За упорство, отличную память, улыбку<br>и успешное выполнение всех заданий! 🌟
+                        </div>
+                    </div>
+
+                    <div class="cert-footer">
+                        <button class="btn-action no-print" onclick="window.print()">
+                            <svg class="svg-icon" viewBox="0 0 24 24"><path d="M19 8H5c-1.66 0-3 1.34-3 3v6h4v4h12v-4h4v-6c0-1.66-1.34-3-3-3zm-3 11H8v-5h8v5zm3-7c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1zm-1-9H6v4h12V3z"/></svg>
+                            РАСПЕЧАТАТЬ СЕРТИФИКАТ
+                        </button>
+                        <button class="btn-action no-print" style="background:#E2E8F0; color:#4A5568; box-shadow:none;" onclick="window.close()">
+                            ВЕРНУТЬСЯ К ТРЕКЕРУ
+                        </button>
+                        <div class="copyright">
+                            2026 [@tatikhi]. Все права защищены.
+                        </div>
+                    </div>
+                </div>
+            </body>
+            </html>
+        `);
+        certWindow.document.close();
+    }
 }
 
 // Запуск первичной отрисовки трекера
