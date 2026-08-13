@@ -88,7 +88,7 @@
         }
 
         .greeting-text {
-            text-align: center; /* Центрируем строки текста аккуратно */
+            text-align: center;
         }
 
         /* АВАТАРКА ЛИСЕНКА (ВЕРХНЯЯ) */
@@ -530,11 +530,9 @@
 </head>
 <body>
 
-<!-- КАНВАС ДЛЯ КОНФЕТТИ -->
 <canvas id="confetti-canvas"></canvas>
 
 <div class="container">
-    <!-- HEADER -->
     <div class="header">
         <div class="greeting-box">
             <img src="fox_avatar.png" alt="Лисенок" class="fox-avatar-top" onerror="this.outerHTML='<div class=\'fox-avatar-top\'>🦊</div>'">
@@ -548,7 +546,6 @@
                 <svg class="svg-icon" viewBox="0 0 24 24"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>
                 Скопировать ссылку с прогрессом
             </button>
-            <!-- КНОПКА ОТКРЫТЬ ДНИ ДЛЯ РОДИТЕЛЕЙ -->
             <button class="btn-open-parents" onclick="openDaysForParents()">⚙️ Открыть дни (при сбросе кэша)</button>
         </div>
 
@@ -568,10 +565,8 @@
         <div class="marathon-banner">МАРАФОН НА 30 ДНЕЙ</div>
     </div>
 
-    <!-- DAYS CONTAINER -->
     <div id="days-container"></div>
 
-    <!-- FOOTER (ВСЕГДА ВИДИМ) -->
     <div class="footer">
         <div id="certificate-block" style="display:none; margin-bottom: 20px;">
             <button class="btn-certificate" onclick="generateCertificate()">
@@ -584,12 +579,25 @@
             2026 [@tatikhi]. Все права защищены. Материалы предназначены исключительно для индивидуального личного использования. Распространение, копирование и передача доступа третьим лицам запрещены.
         </div>
 
-        <!-- КНОПКА ДЛЯ РОДИТЕЛЕЙ (СБРОС) -->
         <button class="btn-reset-parents" onclick="resetDayForParents()">⚙️ Сбросить прогресс дня (для родителей)</button>
     </div>
 </div>
 
 <script>
+// ФОНОВАЯ ПРЕДЗАГРУЗКА КАРТИНОК ДЛЯ ИГРЫ МЕМОРИ
+window.addEventListener('load', () => {
+    const memoryImages = [
+        'yellow_pic.jpg', 'card_yellow.jpg',
+        'run_pic.jpg', 'card_run.jpg',
+        'hands_pic.jpg', 'card_hands.jpg',
+        'tiger_pic.jpg', 'card_tiger.jpg'
+    ];
+    memoryImages.forEach(src => {
+        const img = new Image();
+        img.src = src;
+    });
+});
+
 // ВЕКТОРНЫЕ ИКОНКИ
 const svgLightbulb = `<svg class="svg-icon" style="fill:#F1C40F; width:26px; height:26px; flex-shrink:0;" viewBox="0 0 24 24"><path d="M12 2C8.14 2 5 5.14 5 9c0 2.38 1.19 4.47 3 5.74V17c0 .55.45 1 1 1h6c.55 0 1-.45 1-1v-2.26c1.81-1.27 3-3.36 3-5.74 0-3.86-3.14-7-7-7zm-2 17h4v1h-4zm0 2h4v1h-4z"/></svg>`;
 
@@ -638,7 +646,7 @@ const daysData = [
     { day: 28, week: 4, title: "ДЕНЬ 28 : СОБАКА (DOG)", parentText: "Родителям: включите аудио. Задача — изобразить собаку и повторить слово за педагогом." },
 
     { day: 29, week: 5, isBonus: true, title: "ДЕНЬ 29 : МИНИ-ИГРА «МЕМОРИ» (НАЙДИ ПАРУ)", parentText: "Родителям: переворачивайте карточки и находите одинаковые пары «слово+картинка»." },
-    { day: 30, week: 5, isBonus: true, title: "ДЕНЬ 30 : ТВОРЧЕСКОЕ ЗАДАНИЕ «РАСКРАСКА»", parentText: "Родителям: финальное творческое задание! Задача - раскрасить, используя изученные цвета и громко сказать: «DOG!»." }
+    { day: 30, week: 5, isBonus: true, title: "ДЕНЬ 30 : ТВОРЧЕСКОЕ ЗАДАНИЕ «РАСКРАСКА»", parentText: "Родителям: финальное творческое задание!" }
 ];
 
 // --- 2. ИНИЦИАЛИЗАЦИЯ ИМЕНИ, ВОЗРАСТА И ПРОГРЕССА ИЗ URL ---
