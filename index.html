@@ -572,9 +572,9 @@
     <!-- DAYS CONTAINER -->
     <div id="days-container"></div>
 
-    <!-- FOOTER (ВСЕГДА ВИДИМ) -->
+    <!-- FOOTER (КНОПКА СЕРТИФИКАТА ТЕПЕРЬ ВИДИМА ВСЕГДА) -->
     <div class="footer">
-        <div id="certificate-block" style="display:none; margin-bottom: 20px;">
+        <div id="certificate-block" style="margin-bottom: 20px;">
             <button class="btn-certificate" onclick="generateCertificate()">
                 <svg class="svg-icon" viewBox="0 0 24 24"><path d="M5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82zM12 3L1 9l11 6 9-4.91V17h2V9L12 3z"/></svg>
                 СКАЧАТЬ ИМЕННОЙ СЕРТИФИКАТ
@@ -923,13 +923,6 @@ function updateProgress() {
 
     document.getElementById('progress-text').textContent = `${current} / ${total} заданий`;
     document.getElementById('progress-fill').style.width = `${percentage}%`;
-
-    // Кнопка показывается, если завершен 30-й день либо пройдено >= 30 заданий
-    if (completedDays.includes(30) || current >= total) {
-        document.getElementById('certificate-block').style.display = 'block';
-    } else {
-        document.getElementById('certificate-block').style.display = 'none';
-    }
 }
 
 function playAudio(dayNumber) {
@@ -1053,7 +1046,6 @@ function generateCertificate() {
     const currentMonth = months[now.getMonth()];
     const currentYear = now.getFullYear();
 
-    // Функция открытия окна (с готовой картинкой или резервным вариантом)
     const openCertWindow = (imgDataUrl = null) => {
         const win = window.open('', '_blank');
         if (win) {
@@ -1082,7 +1074,6 @@ function generateCertificate() {
         }
     };
 
-    // Если библиотека не подключилась — открываем окно напрямую без канваса
     if (typeof html2canvas === 'undefined') {
         openCertWindow(null);
         return;
