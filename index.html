@@ -531,9 +531,11 @@
 </head>
 <body>
 
+<!-- КАНВАС ДЛЯ КОНФЕТТИ -->
 <canvas id="confetti-canvas"></canvas>
 
 <div class="container">
+    <!-- HEADER -->
     <div class="header">
         <div class="greeting-box">
             <img src="fox_avatar.png" alt="Лисенок" class="fox-avatar-top" onerror="this.outerHTML='<div class=\'fox-avatar-top\'>🦊</div>'">
@@ -547,6 +549,7 @@
                 <svg class="svg-icon" viewBox="0 0 24 24"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>
                 Скопировать ссылку с прогрессом
             </button>
+            <!-- КНОПКА ОТКРЫТЬ ДНИ ДЛЯ РОДИТЕЛЕЙ -->
             <button class="btn-open-parents" onclick="openDaysForParents()">⚙️ Открыть дни (при сбросе кэша)</button>
         </div>
 
@@ -566,8 +569,10 @@
         <div class="marathon-banner">МАРАФОН НА 30 ДНЕЙ</div>
     </div>
 
+    <!-- DAYS CONTAINER -->
     <div id="days-container"></div>
 
+    <!-- FOOTER (ВСЕГДА ВИДИМ) -->
     <div class="footer">
         <div id="certificate-block" style="display:none; margin-bottom: 20px;">
             <button class="btn-certificate" onclick="generateCertificate()">
@@ -580,6 +585,7 @@
             2026 [@tatikhi]. Все права защищены. Материалы предназначены исключительно для индивидуального личного использования. Распространение, копирование и передача доступа третьим лицам запрещены.
         </div>
 
+        <!-- КНОПКА ДЛЯ РОДИТЕЛЕЙ (СБРОС) -->
         <button class="btn-reset-parents" onclick="resetDayForParents()">⚙️ Сбросить прогресс дня (для родителей)</button>
     </div>
 </div>
@@ -644,9 +650,17 @@ const urlProgress = urlParams.get('p');
 
 const docId = (rawName && rawName.trim() !== '') ? decodeURIComponent(rawName) : 'СУПЕРГЕРОЙ';
 const displayName = docId.split(/[_\-\s]+/)[0].toUpperCase();
-const childAge = (rawAge && !isNaN(rawAge)) ? rawAge.trim() : '5';
+const childAge = (rawAge && !isNaN(rawAge)) ? parseInt(rawAge.trim(), 10) : 5;
 
-document.getElementById('child-name-display').textContent = `${displayName}, ${childAge} лет`;
+// Автоматическое склонение слова "год/года/лет"
+let ageWord = 'лет';
+if (childAge === 2 || childAge === 3 || childAge === 4) {
+    ageWord = 'года';
+} else if (childAge === 1) {
+    ageWord = 'год';
+}
+
+document.getElementById('child-name-display').textContent = `${displayName}, ${childAge} ${ageWord}`;
 document.title = `Трекер — ${displayName}`;
 
 const STORAGE_KEY = `tracker_progress_${docId}`;
@@ -699,7 +713,6 @@ function renderTracker() {
         const card = document.createElement('div');
         card.className = `day-card ${isCompleted ? 'completed' : ''} ${isActive && !isCompleted ? 'active' : ''} ${!isActive ? 'disabled' : ''}`;
 
-        // Для бонусных дней текст описания (кроме памятки родителям) центрирован (для 30 дня текст удален)
         const bodyContent = data.isBonus ? `
             ${data.day === 29 ? '<div class="bonus-centered-text">Найдите все парные карточки!</div>' : ''}
             ${data.day === 29 ? renderMemoryGameHtml() : ''}
