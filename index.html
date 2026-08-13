@@ -818,7 +818,7 @@ function openDaysForParents() {
             }
             localStorage.setItem(STORAGE_KEY, JSON.stringify(completedDays));
             renderTracker();
-            alert(`Прогресс успешно восстановлен до ${maxDay}-го дня! Кнопка сертификата активирована.`);
+            alert(`Прогресс успешно восстановлен до ${maxDay}-го дня!`);
         } else {
             alert("Пожалуйста, введите корректный номер дня от 1 до 30.");
         }
@@ -917,7 +917,6 @@ function launchConfetti(event) {
 
 function updateProgress() {
     const total = 30;
-    // Считаем уникальные выполненные дни (исправление защиты от дубликатов)
     const uniqueCompleted = [...new Set(completedDays)].filter(n => n >= 1 && n <= 30);
     const current = uniqueCompleted.length;
     const percentage = Math.round((current / total) * 100);
@@ -925,8 +924,8 @@ function updateProgress() {
     document.getElementById('progress-text').textContent = `${current} / ${total} заданий`;
     document.getElementById('progress-fill').style.width = `${percentage}%`;
 
-    // Кнопка появляется, если пройдено ровно 30 дней (или больше)
-    if (current >= total) {
+    // Кнопка показывается, если завершен 30-й день либо пройдено >= 30 заданий
+    if (completedDays.includes(30) || current >= total) {
         document.getElementById('certificate-block').style.display = 'block';
     } else {
         document.getElementById('certificate-block').style.display = 'none';
@@ -1044,7 +1043,7 @@ function openAndPrintColoring() {
     }
 }
 
-// --- 6. ГЕНЕРАЦИЯ СЕРТИФИКАТА (РОВНЫЕ ОТСТУПЫ 1,2,3,4 И ОТКРЫТИЕ КАРТИНКОЙ) ---
+// --- 6. ГЕНЕРАЦИЯ СЕРТИФИКАТА С ФОЛЛБЕКОМ ---
 function generateCertificate() {
     const now = new Date();
     const months = [
@@ -1053,6 +1052,41 @@ function generateCertificate() {
     ];
     const currentMonth = months[now.getMonth()];
     const currentYear = now.getFullYear();
+
+    // Функция открытия окна (с готовой картинкой или резервным вариантом)
+    const openCertWindow = (imgDataUrl = null) => {
+        const win = window.open('', '_blank');
+        if (win) {
+            win.document.write(`
+                <!DOCTYPE html>
+                <html lang="ru">
+                <head>
+                    <meta charset="UTF-8">
+                    <title>Сертификат — ${displayName}</title>
+                    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+                    <style>
+                        body { margin: 0; background: #2C3E50; display: flex; flex-direction: column; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; font-family: 'Nunito', sans-serif; }
+                        .hint { color: #FFF; margin-bottom: 15px; font-size: 15px; font-weight: 700; text-align: center; }
+                        .print-btn { background: #68C4C6; color: #1A3636; border: none; padding: 10px 20px; border-radius: 10px; font-weight: 800; cursor: pointer; margin-bottom: 15px; font-size: 14px; }
+                        img { max-width: 100%; height: auto; box-shadow: 0 10px 30px rgba(0,0,0,0.5); border-radius: 12px; }
+                    </style>
+                </head>
+                <body>
+                    <div class="hint">Нажмите и удерживайте картинку для сохранения, либо нажмите кнопку ниже для печати 💾</div>
+                    <button class="print-btn" onclick="window.print()">🖨️ Печать / Сохранить в PDF</button>
+                    ${imgDataUrl ? `<img src="${imgDataUrl}" alt="Сертификат победителя">` : '<p style="color:white; text-align:center;">Не удалось создать картинку автоматически, используйте печать выше.</p>'}
+                </body>
+                </html>
+            `);
+            win.document.close();
+        }
+    };
+
+    // Если библиотека не подключилась — открываем окно напрямую без канваса
+    if (typeof html2canvas === 'undefined') {
+        openCertWindow(null);
+        return;
+    }
 
     const tempDiv = document.createElement('div');
     tempDiv.style.position = 'absolute';
@@ -1122,32 +1156,11 @@ function generateCertificate() {
     html2canvas(tempDiv.firstElementChild, { scale: 2, useCORS: true, allowTaint: true }).then(canvas => {
         document.body.removeChild(tempDiv);
         const dataUrl = canvas.toDataURL('image/png');
-        const win = window.open('', '_blank');
-        if (win) {
-            win.document.write(`
-                <!DOCTYPE html>
-                <html lang="ru">
-                <head>
-                    <meta charset="UTF-8">
-                    <title>Сертификат — ${displayName}</title>
-                    <style>
-                        body { margin: 0; background: #2C3E50; display: flex; flex-direction: column; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; font-family: 'Nunito', sans-serif; }
-                        .hint { color: #FFF; margin-bottom: 15px; font-size: 15px; font-weight: 700; text-align: center; }
-                        img { max-width: 100%; height: auto; box-shadow: 0 10px 30px rgba(0,0,0,0.5); border-radius: 12px; }
-                    </style>
-                </head>
-                <body>
-                    <div class="hint">Нажмите и удерживайте картинку (или нажмите правой кнопкой мыши), чтобы сохранить её на устройство 💾</div>
-                    <img src="${dataUrl}" alt="Сертификат победителя">
-                </body>
-                </html>
-            `);
-            win.document.close();
-        }
+        openCertWindow(dataUrl);
     }).catch(err => {
         document.body.removeChild(tempDiv);
-        alert("Не удалось сгенерировать изображение сертификата. Попробуйте еще раз.");
         console.error(err);
+        openCertWindow(null);
     });
 }
 
