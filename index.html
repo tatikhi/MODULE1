@@ -62,14 +62,16 @@
             box-shadow: 0 10px 30px rgba(0,0,0,0.08);
         }
 
-        /* HEADER SECTION */
-        .header {
+        /* ДВА РАЗДЕЛЬНЫХ БЛОКА ШАПКИ */
+        .header-block {
             background: linear-gradient(135deg, var(--header-bg), var(--header-dark));
             border-radius: var(--card-radius);
             padding: 18px 15px;
             text-align: center;
             color: white;
             position: relative;
+            margin-bottom: 15px; /* Расстояние между блоками, равное отступу между карточками */
+            box-shadow: 0 4px 15px rgba(104, 196, 198, 0.15);
         }
 
         /* ЕДИНАЯ РАМКА ДЛЯ ПРИВЕТСТВИЯ И ЛИСЕНКА (СТРОГО ЦЕНТРИРОВАНА) */
@@ -186,7 +188,6 @@
         /* НЕЗАМЕТНАЯ КНОПКА СО СКРУГЛЕННЫМИ УГЛАМИ ДЛЯ НАСТРОЕК */
         .parents-settings-wrap {
             text-align: center;
-            margin-bottom: 15px;
         }
 
         .btn-open-parents {
@@ -229,7 +230,7 @@
             height: 16px;
             border-radius: 10px;
             position: relative;
-            margin-bottom: 15px;
+            margin-bottom: 12px;
         }
 
         .progress-bar-fill {
@@ -560,8 +561,9 @@
 <canvas id="confetti-canvas"></canvas>
 
 <div class="container" id="main-app-container">
-    <!-- HEADER -->
-    <div class="header">
+    
+    <!-- ПЕРВЫЙ БЛОК ШАПКИ -->
+    <div class="header-block">
         <div class="greeting-box">
             <img src="fox_avatar.png" alt="Лисенок" class="fox-avatar-top" onerror="this.outerHTML='<div class=\'fox-avatar-top\'>🦊</div>'">
             <div class="greeting-text">Привет! Поиграем в английский?</div>
@@ -569,26 +571,25 @@
 
         <div class="tpr-banner">Методика TPR: учим английский через движение и игры</div>
 
-        <!-- ДВЕ СИММЕТРИЧНЫЕ КНОПКИ В ШАПКЕ -->
         <div class="header-buttons">
-            <!-- КНОПКА 1: СКОПИРОВАТЬ ССЫЛКУ -->
             <button class="header-action-btn" onclick="copyPersonalLink()">
                 <svg class="svg-icon" style="width: 14px; height: 14px;" viewBox="0 0 24 24"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>
                 Скопировать ссылку с прогрессом
             </button>
 
-            <!-- КНОПКА 2: НАПИСАТЬ ПЕДАГОГУ -->
             <a class="header-action-btn" href="https://t.me/tati_khi" target="_blank" rel="noopener noreferrer">
                 <svg class="svg-icon" style="width: 15px; height: 15px;" viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
                 Написать педагогу / Личное сопровождение
             </a>
         </div>
 
-        <!-- КНОПКА НАСТРОЕК РОДИТЕЛЕЙ -->
         <div class="parents-settings-wrap">
             <button class="btn-open-parents" onclick="openDaysForParents()">⚙️ Открыть дни (при сбросе кэша)</button>
         </div>
+    </div>
 
+    <!-- ВТОРОЙ БЛОК ШАПКИ -->
+    <div class="header-block">
         <div class="child-info-box">
             <span id="child-name-display">СУПЕРГЕРОЙ, 5 лет</span>
             <span id="progress-text">0 / 30 заданий</span>
