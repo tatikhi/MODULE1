@@ -145,39 +145,50 @@
             text-align: center;
         }
 
-        /* БЛОК КНОПОК В ШАПКЕ */
+        /* БЛОК СИММЕТРИЧНЫХ КНОПОК В ШАПКЕ */
         .header-buttons {
             display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 8px;
-            margin-bottom: 15px;
+            flex-direction: row;
+            justify-content: center;
+            align-items: stretch;
+            gap: 10px;
+            margin-bottom: 12px;
+            width: 100%;
+            flex-wrap: wrap;
         }
 
-        /* КНОПКА СКОПИРОВАТЬ ССЫЛКУ */
-        .btn-copy-top {
-            width: fit-content;
+        .header-action-btn {
+            flex: 1;
+            min-width: 200px;
             background: #FFFFFF;
             border: none;
             color: var(--header-text-unified);
-            padding: 8px 14px;
+            padding: 10px 10px;
             border-radius: 12px;
-            font-size: 13px;
+            font-size: 12px;
             font-weight: 700;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 8px;
+            gap: 6px;
             box-shadow: 0 2px 6px rgba(0,0,0,0.08);
             transition: background 0.2s ease;
+            text-decoration: none;
+            text-align: center;
+            line-height: 1.3;
         }
 
-        .btn-copy-top:hover {
+        .header-action-btn:hover {
             background: #F8F9FA;
         }
 
-        /* НЕЗАМЕТНАЯ КНОПКА СО СКРУГЛЕННЫМИ УГЛАМИ */
+        /* НЕЗАМЕТНАЯ КНОПКА СО СКРУГЛЕННЫМИ УГЛАМИ ДЛЯ НАСТРОЕК */
+        .parents-settings-wrap {
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
         .btn-open-parents {
             background: rgba(255, 255, 255, 0.2);
             border: none;
@@ -340,7 +351,7 @@
             border-top: 1px dashed #E2E8F0;
         }
 
-        /* БЛОК РЕКОМЕНДАЦИЙ РОДИТЕЛЯМ (ОСТАЛСЯ СЛЕВА, КАК ЕСТЬ) */
+        /* БЛОК РЕКОМЕНДАЦИЙ РОДИТЕЛЯМ */
         .parent-box {
             background: #FFF9E6;
             border-left: 4px solid #F1C40F;
@@ -558,11 +569,23 @@
 
         <div class="tpr-banner">Методика TPR: учим английский через движение и игры</div>
 
+        <!-- ДВЕ СИММЕТРИЧНЫЕ КНОПКИ В ШАПКЕ -->
         <div class="header-buttons">
-            <button class="btn-copy-top" onclick="copyPersonalLink()">
-                <svg class="svg-icon" viewBox="0 0 24 24"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>
+            <!-- КНОПКА 1: СКОПИРОВАТЬ ССЫЛКУ -->
+            <button class="header-action-btn" onclick="copyPersonalLink()">
+                <svg class="svg-icon" style="width: 14px; height: 14px;" viewBox="0 0 24 24"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>
                 Скопировать ссылку с прогрессом
             </button>
+
+            <!-- КНОПКА 2: НАПИСАТЬ ПЕДАГОГУ -->
+            <a class="header-action-btn" href="https://t.me/tati_khi" target="_blank" rel="noopener noreferrer">
+                <svg class="svg-icon" style="width: 15px; height: 15px;" viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
+                Написать педагогу / Личное сопровождение
+            </a>
+        </div>
+
+        <!-- КНОПКА НАСТРОЕК РОДИТЕЛЕЙ -->
+        <div class="parents-settings-wrap">
             <button class="btn-open-parents" onclick="openDaysForParents()">⚙️ Открыть дни (при сбросе кэша)</button>
         </div>
 
@@ -594,7 +617,7 @@
             </button>
         </div>
 
-        <!-- ВЫПАДАЮЩИЙ БЛОК ПРЯМО НА СТРАНИЦЕ (СКРЫТ ДО КЛИКА) -->
+        <!-- ВЫПАДАЮЩИЙ БЛОК ПРЯМО НА СТРАНИЦЕ -->
         <div id="certificate-preview-box" style="display: none; margin-top: 15px; background: #2C3E50; padding: 15px; border-radius: 16px; text-align: center; box-shadow: 0 10px 25px rgba(0,0,0,0.15);">
             <div style="color: #FFF; margin-bottom: 10px; font-size: 13px; font-weight: 800; line-height: 1.4;">
                 👇 Зажмите картинку пальцем (или кликните правой кнопкой мыши), чтобы сохранить:
