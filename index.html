@@ -1269,34 +1269,39 @@ function generateCertificate() {
             text-align: center;
             display: flex;
             flex-direction: column;
-            justify-content: flex-start;
+            justify-content: space-between;
             align-items: center;
             font-family: 'Nunito', sans-serif;
             box-sizing: border-box;
             position: relative;
         ">
-            <div style="width: 100%; display: flex; flex-direction: column; align-items: center; margin-bottom: 4px;">
-                <svg style="width: 110px; height: 110px; fill: #F1C40F; margin-bottom: 8px;" viewBox="0 0 24 24">
+            <!-- Логотип в левом верхнем углу -->
+            <div style="position: absolute; top: 20px; left: 24px;">
+                <img src="logo_cert.png" crossorigin="anonymous" style="width: 75px; height: auto; display: block;" onerror="this.outerHTML='<div style=\'font-size: 14px; font-weight: 900; color: #50A3A6;\'>khj knows</div>'">
+            </div>
+
+            <div style="width: 100%; display: flex; flex-direction: column; align-items: center; margin-top: 15px;">
+                <svg style="width: 90px; height: 90px; fill: #F1C40F; margin-bottom: 6px;" viewBox="0 0 24 24">
                     <path d="M19 5h-2V3H7v2H5c-1.1 0-2 .9-2 2v1c0 2.55 1.92 4.63 4.39 4.94A5.01 5.01 0 0011 15.9V18H8v2h8v-2h-3v-2.1c2.12-.39 3.79-2.02 4.39-4.14C19.08 11.63 21 9.55 21 7V5c0-1.1-.9-2-2-2zM5 8V7h2v3.82C5.84 10.4 5 9.3 5 8zm14 0c0 1.3-.84 2.4-2 2.82V7h2v1z"/>
                     <path d="M3.5 1.5l.5 1.2 1.2.5-1.2.5-.5 1.2-.5-1.2-1.2-.5 1.2-.5z" fill="#F1C40F"/>
                     <path d="M20.5 1.5l.5 1.2 1.2.5-1.2.5-.5 1.2-.5-1.2-1.2-.5 1.2-.5z" fill="#F1C40F"/>
                 </svg>
-                <div style="width: 100%; font-size: 26px; font-weight: 900; color: #50A3A6; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 4px; text-align: center;">СЕРТИФИКАТ ПОБЕДИТЕЛЯ</div>
-                <div style="font-size: 13px; font-weight: 700; color: #7F8C8D; text-align: center; margin-bottom: 22px;">За прохождение 1 уровня «30 ДНЕЙ ПРИКЛЮЧЕНИЙ»!</div>
+                <div style="width: 100%; font-size: 24px; font-weight: 900; color: #50A3A6; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 4px; text-align: center;">СЕРТИФИКАТ ПОБЕДИТЕЛЯ</div>
+                <div style="font-size: 12px; font-weight: 700; color: #7F8C8D; text-align: center;">За прохождение 1 уровня «30 ДНЕЙ ПРИКЛЮЧЕНИЙ»!</div>
             </div>
 
-            <div style="display: flex; justify-content: center; align-items: center; margin-bottom: 25px;">
-                <img src="fox_certificate.png" crossorigin="anonymous" style="width: 120px; height: 120px; background: #FFFFFF; border-radius: 50%; border: 4px solid #68C4C6; object-fit: cover;" onerror="this.outerHTML='<div style=\'width:120px;height:120px;background:#fff;border-radius:50%;border:4px solid #68C4C6;display:flex;align-items:center;justify-content:center;font-size:45px;\'>🦊🏆</div>'">
+            <div style="display: flex; justify-content: center; align-items: center; margin: 10px 0;">
+                <img src="fox_certificate.png" crossorigin="anonymous" style="width: 105px; height: 105px; background: #FFFFFF; border-radius: 50%; border: 4px solid #68C4C6; object-fit: cover;" onerror="this.outerHTML='<div style=\'width:105px;height:105px;background:#fff;border-radius:50%;border:4px solid #68C4C6;display:flex;align-items:center;justify-content:center;font-size:40px;\'>🦊🏆</div>'">
             </div>
 
-            <div style="width: 100%; padding: 14px 16px; background: #D4F1F4; border-radius: 18px; border: 2px dashed #68C4C6; text-align: center; box-sizing: border-box; box-shadow: 0 4px 15px rgba(0,0,0,0.03);">
-                <div style="font-size: 14px; font-weight: 700; color: #2C3E50; margin-bottom: 4px;">ПОЛУЧАЕТ:</div>
-                <div style="font-size: 28px; font-weight: 900; color: #2C3E50; border-bottom: 3px solid #68C4C6; width: 100%; margin: 0 auto 8px auto; padding-bottom: 2px; letter-spacing: 1px; display: flex; align-items: center; justify-content: center;">${displayName} (${childAge} ${ageWord})</div>
-                <div style="font-size: 15px; font-weight: 800; color: #1A3636; line-height: 1.3; margin-bottom: 8px;">За упорство, отличную память, улыбку<br>и успешное выполнение всех заданий! 🌟</div>
-                <div style="font-size: 12px; font-weight: 800; color: #68C4C6; text-align: right; width: 100%; padding-right: 5px;">${currentMonth}, ${currentYear} года</div>
+            <div style="width: 100%; padding: 12px 16px; background: #D4F1F4; border-radius: 18px; border: 2px dashed #68C4C6; text-align: center; box-sizing: border-box; box-shadow: 0 4px 15px rgba(0,0,0,0.03);">
+                <div style="font-size: 13px; font-weight: 700; color: #2C3E50; margin-bottom: 4px;">ПОЛУЧАЕТ:</div>
+                <div style="font-size: 26px; font-weight: 900; color: #2C3E50; border-bottom: 3px solid #68C4C6; width: 100%; margin: 0 auto 6px auto; padding-bottom: 2px; letter-spacing: 1px; display: flex; align-items: center; justify-content: center;">${displayName} (${childAge} ${ageWord})</div>
+                <div style="font-size: 14px; font-weight: 800; color: #1A3636; line-height: 1.3; margin-bottom: 6px;">За упорство, отличную память, улыбку<br>и успешное выполнение всех заданий! 🌟</div>
+                <div style="font-size: 11px; font-weight: 800; color: #68C4C6; text-align: right; width: 100%; padding-right: 5px;">${currentMonth}, ${currentYear} года</div>
             </div>
 
-            <div style="width: 100%; text-align: center; margin-top: auto; padding-top: 15px;">
+            <div style="width: 100%; text-align: center; padding-top: 5px;">
                 <div style="font-size: 9px; color: #95A5A6;">2026 [ khi-knows.ru ]. Все права защищены. Материалы предназначены исключительно для индивидуального личного использования.</div>
             </div>
         </div>
