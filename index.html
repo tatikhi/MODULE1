@@ -69,7 +69,7 @@
             text-align: center;
             color: white;
             position: relative;
-            margin-bottom: 15px; /* Расстояние между блоками, равное отступу между карточками */
+            margin-bottom: 15px;
             box-shadow: 0 4px 15px rgba(104, 196, 198, 0.15);
         }
 
@@ -334,7 +334,6 @@
             text-align: left;
         }
 
-        /* ЦЕНТРИРОВАНИЕ ДЛЯ 29 И 30 ДНЕЙ (АВАТАР + НАЗВАНИЕ) */
         .day-card.bonus-card .card-top-content {
             flex-direction: column;
             align-items: center;
@@ -351,7 +350,6 @@
             border-top: 1px dashed #E2E8F0;
         }
 
-        /* БЛОК РЕКОМЕНДАЦИЙ РОДИТЕЛЯМ */
         .parent-box {
             background: #FFF9E6;
             border-left: 4px solid #F1C40F;
@@ -367,7 +365,6 @@
             gap: 10px;
         }
 
-        /* ЦЕНТРИРОВАНИЕ ТЕКСТА ДЛЯ БОНУСНЫХ ДНЕЙ */
         .bonus-centered-text {
             text-align: center;
             margin-bottom: 12px;
@@ -376,7 +373,7 @@
             color: var(--btn-text-dark);
         }
 
-        /* КНОПКА АУДИО */
+        /* КНОПКА АУДИО (С АНИМАЦИЕЙ И СОСТОЯНИЕМ DISABLE) */
         .btn-audio {
             width: 100%;
             background: var(--turquoise-accent);
@@ -393,6 +390,22 @@
             gap: 8px;
             margin-bottom: 10px;
             box-shadow: 0 4px 10px rgba(104, 196, 198, 0.25);
+            transition: transform 0.1s ease, background-color 0.2s ease, opacity 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        /* Анимация нажатия */
+        .btn-audio:active:not(:disabled) {
+            transform: scale(0.95);
+        }
+
+        /* Неактивное состояние (пока играет аудио) */
+        .btn-audio:disabled {
+            background-color: #D1D5DB;
+            color: #4B5563;
+            cursor: not-allowed;
+            opacity: 0.7;
+            transform: none;
+            box-shadow: none;
         }
 
         .btn-audio .svg-icon {
@@ -426,7 +439,6 @@
             box-shadow: 0 4px 10px rgba(92, 219, 149, 0.3);
         }
 
-        /* АНИМАЦИЯ ПОДСКАКИВАЮЩЕГО КУБКА */
         @keyframes trophyJump {
             0%, 100% { transform: translateY(0) scale(1); }
             50% { transform: translateY(-6px) scale(1.15) rotate(-5deg); }
@@ -631,7 +643,6 @@
 </div>
 
 <script>
-// ФОНОВАЯ ПРЕДЗАГРУЗКА КАРТИНОК ДЛЯ ИГРЫ МЕМОРИ
 window.addEventListener('load', () => {
     const memoryImages = [
         'yellow_pic.jpg', 'card_yellow.jpg',
@@ -645,7 +656,6 @@ window.addEventListener('load', () => {
     });
 });
 
-// ВЕКТОРНЫЕ ИКОНКИ
 const svgLightbulb = `<svg class="svg-icon" style="fill:#F1C40F; width:26px; height:26px; flex-shrink:0;" viewBox="0 0 24 24"><path d="M12 2C8.14 2 5 5.14 5 9c0 2.38 1.19 4.47 3 5.74V17c0 .55.45 1 1 1h6c.55 0 1-.45 1-1v-2.26c1.81-1.27 3-3.36 3-5.74 0-3.86-3.14-7-7-7zm-2 17h4v1h-4zm0 2h4v1h-4z"/></svg>`;
 
 const svgSparklyTrophy = `
@@ -658,7 +668,6 @@ const svgSparklyTrophy = `
 
 const svgQuestionCard = `<svg class="memory-q-icon" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 16h-2v-2h2v2zm1.07-7.75l-.9.92C12.45 11.9 12 12.5 12 14h-2v-.5c0-1.1.45-2.1 1.17-2.83l1.24-1.26c.37-.36.59-.86.59-1.41 0-1.1-.9-2-2-2s-2 .9-2 2H7c0-2.76 2.24-5 5-5s5 2.24 5 5c0 1.04-.42 1.99-1.07 2.75z"/></svg>`;
 
-// --- 1. ДАННЫЕ ДНЕЙ ---
 const daysData = [
     { day: 1, week: 1, title: "ДЕНЬ 1 : КРАСНЫЙ (RED)", parentText: "Родителям: включите аудио. Задача — быстро найти красный предмет и повторить слово за педагогом." },
     { day: 2, week: 1, title: "ДЕНЬ 2 : СИНИЙ (BLUE)", parentText: "Родителям: включите аудио. Задача — быстро найти синий предмет и повторить слово за педагогом." },
@@ -696,7 +705,6 @@ const daysData = [
     { day: 30, week: 5, isBonus: true, title: "ДЕНЬ 30 : ТВОРЧЕСКОЕ ЗАДАНИЕ «РАСКРАСКА»", parentText: "Родителям: финальное творческое задание!" }
 ];
 
-// --- 2. ИНИЦИАЛИЗАЦИЯ ИМЕНИ, ВОЗРАСТА И ПРОГРЕССА ИЗ URL ---
 const urlParams = new URLSearchParams(window.location.search);
 const rawName = urlParams.get('name');
 const rawAge = urlParams.get('age');
@@ -706,7 +714,6 @@ const docId = (rawName && rawName.trim() !== '') ? decodeURIComponent(rawName) :
 const displayName = docId.split(/[_\-\s]+/)[0].toUpperCase();
 const childAge = (rawAge && !isNaN(rawAge)) ? parseInt(rawAge.trim(), 10) : 5;
 
-// Автоматическое склонение слова "год/года/лет"
 let ageWord = 'лет';
 if (childAge === 2 || childAge === 3 || childAge === 4) {
     ageWord = 'года';
@@ -736,7 +743,6 @@ if (urlProgress) {
 
 let matchedMemoryKeys = JSON.parse(localStorage.getItem(MEMORY_MATCHED_KEY)) || [];
 
-// --- 3. ОТРИСОВКА ТРЕКЕРА ---
 function renderTracker() {
     const container = document.getElementById('days-container');
     container.innerHTML = '';
@@ -773,7 +779,7 @@ function renderTracker() {
             ${data.day === 30 ? renderColoringHtml() : ''}
         ` : `
             ${data.day <= 28 ? `
-                <button class="btn-audio" onclick="playAudio(${data.day})">
+                <button class="btn-audio" onclick="playAudio(${data.day}, this)">
                     <svg class="svg-icon" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
                     СЛУШАТЬ ЗАДАНИЕ
                 </button>
@@ -824,7 +830,6 @@ function toggleDay(day, event) {
     }
 }
 
-// ФУНКЦИЯ СБРОСА ДНЯ ДЛЯ РОДИТЕЛЕЙ (ФУТЕР)
 function resetDayForParents() {
     const input = prompt("Введите номер дня (от 1 до 30), который нужно сделать невыполненным:");
     if (input !== null) {
@@ -847,7 +852,6 @@ function resetDayForParents() {
     }
 }
 
-// ФУНКЦИЯ ПРИНУДИТЕЛЬНОГО ОТКРЫТИЯ ДО УКАЗАННОГО ДНЯ (ШАПКА)
 function openDaysForParents() {
     const input = prompt("Введите номер последнего дня, до которого нужно открыть прогресс (например: 30):");
     if (input !== null && input.trim() !== "") {
@@ -866,7 +870,6 @@ function openDaysForParents() {
     }
 }
 
-// ФУНКЦИЯ КОПИРОВАНИЯ ССЫЛКИ С ПРОГРЕССОМ И ВОЗРАСТОМ
 function copyPersonalLink() {
     const baseUrl = window.location.origin + window.location.pathname;
     const nameParam = rawName ? `?name=${encodeURIComponent(rawName)}` : '';
@@ -882,7 +885,6 @@ function copyPersonalLink() {
     });
 }
 
-// ДВИЖОК КОНФЕТТИ
 function launchConfetti(event) {
     const canvas = document.getElementById('confetti-canvas');
     if (!canvas) return;
@@ -966,13 +968,36 @@ function updateProgress() {
     document.getElementById('progress-fill').style.width = `${percentage}%`;
 }
 
-// ИЗМЕНЕНО: теперь функция ищет формат .m4a
-function playAudio(dayNumber) {
+// ОБНОВЛЕННАЯ ФУНКЦИЯ ВОСПРОИЗВЕДЕНИЯ С БЛОКИРОВКОЙ КНОПКИ
+function playAudio(dayNumber, btnElement) {
     const audio = new Audio(`audio${dayNumber}.m4a`);
-    audio.play().catch(() => alert(`Аудио файл audio${dayNumber}.m4a пока не добавлен в папку.`));
+
+    // Делаем кнопку неактивной на время воспроизведения
+    if (btnElement) {
+        btnElement.disabled = true;
+    }
+
+    audio.play().catch(() => {
+        alert(`Аудио файл audio${dayNumber}.m4a пока не добавлен в папку.`);
+        if (btnElement) {
+            btnElement.disabled = false;
+        }
+    });
+
+    // Возвращаем активность кнопке по окончании трека
+    audio.addEventListener('ended', () => {
+        if (btnElement) {
+            btnElement.disabled = false;
+        }
+    });
+
+    audio.addEventListener('pause', () => {
+        if (btnElement && (audio.currentTime === 0 || audio.ended)) {
+            btnElement.disabled = false;
+        }
+    });
 }
 
-// --- 4. МЕМОРИ (ДЕНЬ 29) ---
 let activeCards = [];
 
 function flipCard(card, imageSrc, wordKey) {
@@ -1042,7 +1067,6 @@ function renderMemoryGameHtml() {
     return `<div class="memory-grid">${cardsHtml}</div>`;
 }
 
-// --- 5. РАСКРАСКА (ДЕНЬ 30) ---
 function renderColoringHtml() {
     return `
         <div style="text-align:center; margin-bottom:12px;">
@@ -1078,7 +1102,6 @@ function openAndPrintColoring() {
     }
 }
 
-// --- 6. ГЕНЕРАЦИЯ СЕРТИФИКАТА ПРЯМО НА СТРАНИЦЕ ---
 function generateCertificate() {
     const btn = document.getElementById('cert-btn');
     btn.textContent = '⏳ Создаем сертификат...';
@@ -1164,7 +1187,6 @@ function generateCertificate() {
         document.body.removeChild(tempDiv);
         const dataUrl = canvas.toDataURL('image/png');
         
-        // Показываем блок прямо на странице
         const previewBox = document.getElementById('certificate-preview-box');
         const imgResult = document.getElementById('certificate-img-result');
         const downloadLink = document.getElementById('certificate-download-link');
@@ -1187,7 +1209,6 @@ function generateCertificate() {
     });
 }
 
-// Запуск первичной отрисовки трекера
 renderTracker();
 </script>
 </body>
