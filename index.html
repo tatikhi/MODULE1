@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>МОДУЛЬ 1</title>
-    <!-- ИКОНКА (ФАВИКОН) ВО ВКЛАДКЕ БРАУЗЕРА -->
     <link rel="icon" type="image/png" href="logo.png">
     
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
@@ -1284,6 +1283,9 @@ function generateCertificate() {
             height: 840px;
             min-height: 840px;
             background-color: #FFFFFF;
+            background-image: url('pattern.png');
+            background-repeat: repeat;
+            overflow: hidden;
             border-radius: 28px;
             padding: 30px 35px;
             box-shadow: 0 20px 45px rgba(0, 0, 0, 0.15);
@@ -1297,15 +1299,12 @@ function generateCertificate() {
             box-sizing: border-box;
             position: relative;
         ">
-            <!-- Логотип в левом верхнем углу (оставлен на месте) -->
             <div style="position: absolute; top: 22px; left: 24px;">
                 <img src="logo_cert.png" crossorigin="anonymous" style="width: 70px; height: auto; display: block;" onerror="this.outerHTML='<div style=\'font-size: 14px; font-weight: 900; color: #50A3A6;\'>khj knows</div>'">
             </div>
 
-            <!-- Центральный единый блок -->
             <div style="width: 100%; display: flex; flex-direction: column; align-items: center; margin: auto 0; gap: 16px; transform: translateY(-35px);">
                 
-                <!-- Верхний подблок (Кубок + Уменьшенный и центрированный заголовок под ширину рамки с именем) -->
                 <div style="display: flex; flex-direction: column; align-items: center; width: 100%; transform: translateY(-100px);">
                     <svg style="width: 50px; height: 50px; fill: #F1C40F; margin-bottom: 2px;" viewBox="0 0 24 24">
                         <path d="M19 5h-2V3H7v2H5c-1.1 0-2 .9-2 2v1c0 2.55 1.92 4.63 4.39 4.94A5.01 5.01 0 0011 15.9V18H8v2h8v-2h-3v-2.1c2.12-.39 3.79-2.02 4.39-4.14C19.08 11.63 21 9.55 21 7V5c0-1.1-.9-2-2-2zM5 8V7h2v3.82C5.84 10.4 5 9.3 5 8zm14 0c0 1.3-.84 2.4-2 2.82V7h2v1z"/>
@@ -1316,12 +1315,10 @@ function generateCertificate() {
                     <div style="font-size: 11px; font-weight: 700; color: #7F8C8D; text-align: center;">За прохождение 1 модуля «30 ДНЕЙ ПРИКЛЮЧЕНИЙ»!</div>
                 </div>
 
-                <!-- Лисенок -->
                 <div style="display: flex; justify-content: center; align-items: center;">
                     <img src="fox_certificate.png" crossorigin="anonymous" style="width: 75px; height: 75px; background: #FFFFFF; border-radius: 50%; border: 3px solid #68C4C6; object-fit: cover;" onerror="this.outerHTML='<div style=\'width:75px;height:75px;background:#fff;border-radius:50%;border:3px solid #68C4C6;display:flex;align-items:center;justify-content:center;font-size:30px;\'>🦊🏆</div>'">
                 </div>
 
-                <!-- Рамка с именем -->
                 <div style="width: 100%; padding: 10px 16px; background: #D4F1F4; border-radius: 16px; border: 2px dashed #68C4C6; text-align: center; box-sizing: border-box; box-shadow: 0 4px 15px rgba(0,0,0,0.03);">
                     <div style="font-size: 11px; font-weight: 700; color: #2C3E50; margin-bottom: 2px;">ПОЛУЧАЕТ:</div>
                     <div style="font-size: 22px; font-weight: 900; color: #2C3E50; border-bottom: 2px solid #68C4C6; width: 100%; margin: 0 auto 3px auto; padding-bottom: 2px; letter-spacing: 1px; display: flex; align-items: center; justify-content: center;">${displayName} (${childAge} ${ageWord})</div>
@@ -1331,7 +1328,6 @@ function generateCertificate() {
 
             </div>
 
-            <!-- Копирайт внизу -->
             <div style="width: 100%; text-align: center;">
                 <div style="font-size: 9px; color: #95A5A6;">2026 [ khi-knows.ru ]. Все права защищены. Материалы предназначены исключительно для индивидуального личного использования.</div>
             </div>
