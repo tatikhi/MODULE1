@@ -3,7 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Трекер Английского</title>
+    <title>МОДУЛЬ 1</title>
+    <!-- ИКОНКА (ФАВИКОН) ВО ВКЛАДКЕ БРАУЗЕРА -->
+    <link rel="icon" type="image/png" href="logo.png">
+    
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
@@ -783,7 +786,7 @@ if (childAge === 2 || childAge === 3 || childAge === 4) {
 }
 
 document.getElementById('child-name-display').textContent = `${displayName}, ${childAge} ${ageWord}`;
-document.title = `Трекер — ${displayName}`;
+document.title = `МОДУЛЬ 1 — ${displayName}`;
 
 const STORAGE_KEY = `tracker_progress_${docId}`;
 const MEMORY_LAYOUT_KEY = `tracker_memory_layout_${docId}`;
@@ -1275,7 +1278,7 @@ function generateCertificate() {
             box-sizing: border-box;
             position: relative;
         ">
-            <!-- Логотип в левом верхнем углу -->
+            <!-- Логотип в левом верхнем углу (файл logo_cert.png) -->
             <div style="position: absolute; top: 20px; left: 24px;">
                 <img src="logo_cert.png" crossorigin="anonymous" style="width: 75px; height: auto; display: block;" onerror="this.outerHTML='<div style=\'font-size: 14px; font-weight: 900; color: #50A3A6;\'>khj knows</div>'">
             </div>
@@ -1346,4 +1349,4 @@ function generateCertificate() {
 renderTracker();
 </script>
 </body>
-</html> 
+</html>
