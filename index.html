@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Трекер Английского</title>
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
-    <!-- ПОДКЛЮЧЕНИЕ HTML2CANVAS ДЛЯ ГЕНЕРАЦИИ КАРТИНКИ СЕРТИФИКАТА -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
         :root {
@@ -557,12 +556,10 @@
 </head>
 <body>
 
-<!-- КАНВАС ДЛЯ КОНФЕТТИ -->
 <canvas id="confetti-canvas"></canvas>
 
 <div class="container" id="main-app-container">
     
-    <!-- ПЕРВЫЙ БЛОК ШАПКИ -->
     <div class="header-block">
         <div class="greeting-box">
             <img src="fox_avatar.png" alt="Лисенок" class="fox-avatar-top" onerror="this.outerHTML='<div class=\'fox-avatar-top\'>🦊</div>'">
@@ -588,7 +585,6 @@
         </div>
     </div>
 
-    <!-- ВТОРОЙ БЛОК ШАПКИ -->
     <div class="header-block">
         <div class="child-info-box">
             <span id="child-name-display">СУПЕРГЕРОЙ, 5 лет</span>
@@ -606,10 +602,8 @@
         <div class="marathon-banner">УРОВЕНЬ 1 • 30 ДНЕЙ ПРИКЛЮЧЕНИЙ</div>
     </div>
 
-    <!-- DAYS CONTAINER -->
     <div id="days-container"></div>
 
-    <!-- FOOTER (КНОПКА СЕРТИФИКАТА И ВЫПАДАЮЩИЙ БЛОК) -->
     <div class="footer">
         <div id="certificate-block" style="margin-bottom: 10px;">
             <button id="cert-btn" class="btn-certificate" onclick="generateCertificate()">
@@ -618,7 +612,6 @@
             </button>
         </div>
 
-        <!-- ВЫПАДАЮЩИЙ БЛОК ПРЯМО НА СТРАНИЦЕ -->
         <div id="certificate-preview-box" style="display: none; margin-top: 15px; background: #2C3E50; padding: 15px; border-radius: 16px; text-align: center; box-shadow: 0 10px 25px rgba(0,0,0,0.15);">
             <div style="color: #FFF; margin-bottom: 10px; font-size: 13px; font-weight: 800; line-height: 1.4;">
                 👇 Зажмите картинку пальцем (или кликните правой кнопкой мыши), чтобы сохранить:
@@ -973,9 +966,10 @@ function updateProgress() {
     document.getElementById('progress-fill').style.width = `${percentage}%`;
 }
 
+// ИЗМЕНЕНО: теперь функция ищет формат .m4a
 function playAudio(dayNumber) {
-    const audio = new Audio(`audio${dayNumber}.mp3`);
-    audio.play().catch(() => alert(`Аудио файл audio${dayNumber}.mp3 пока не добавлен в папку.`));
+    const audio = new Audio(`audio${dayNumber}.m4a`);
+    audio.play().catch(() => alert(`Аудио файл audio${dayNumber}.m4a пока не добавлен в папку.`));
 }
 
 // --- 4. МЕМОРИ (ДЕНЬ 29) ---
