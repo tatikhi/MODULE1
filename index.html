@@ -373,7 +373,7 @@
             color: var(--btn-text-dark);
         }
 
-        /* КНОПКА АУДИО (С АНИМАЦИЕЙ И СОСТОЯНИЕМ DISABLE) */
+        /* КНОПКА АУДИО */
         .btn-audio {
             width: 100%;
             background: var(--turquoise-accent);
@@ -390,7 +390,13 @@
             gap: 8px;
             margin-bottom: 10px;
             box-shadow: 0 4px 10px rgba(104, 196, 198, 0.25);
-            transition: transform 0.1s ease, background-color 0.2s ease, opacity 0.2s ease, box-shadow 0.2s ease;
+            transition: transform 0.1s ease, background-color 0.3s ease, opacity 0.2s ease, box-shadow 0.3s ease;
+        }
+
+        /* Состояние воспроизведения (зеленая кнопка) */
+        .btn-audio.playing {
+            background: var(--pastel-green) !important;
+            box-shadow: 0 4px 10px rgba(92, 219, 149, 0.3) !important;
         }
 
         /* Анимация нажатия */
@@ -400,12 +406,9 @@
 
         /* Неактивное состояние (пока играет аудио) */
         .btn-audio:disabled {
-            background-color: #D1D5DB;
-            color: #4B5563;
             cursor: not-allowed;
-            opacity: 0.7;
+            opacity: 0.85;
             transform: none;
-            box-shadow: none;
         }
 
         .btn-audio .svg-icon {
@@ -667,6 +670,10 @@ const svgSparklyTrophy = `
 `;
 
 const svgQuestionCard = `<svg class="memory-q-icon" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 16h-2v-2h2v2zm1.07-7.75l-.9.92C12.45 11.9 12 12.5 12 14h-2v-.5c0-1.1.45-2.1 1.17-2.83l1.24-1.26c.37-.36.59-.86.59-1.41 0-1.1-.9-2-2-2s-2 .9-2 2H7c0-2.76 2.24-5 5-5s5 2.24 5 5c0 1.04-.42 1.99-1.07 2.75z"/></svg>`;
+
+// Иконки для аудиоплеера
+const svgPlayIcon = `<svg class="svg-icon" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>`;
+const svgSpeakerIcon = `<svg class="svg-icon" viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>`;
 
 const daysData = [
     { day: 1, week: 1, title: "ДЕНЬ 1 : КРАСНЫЙ (RED)", parentText: "Родителям: включите аудио. Задача — быстро найти красный предмет и повторить слово за педагогом." },
@@ -968,34 +975,38 @@ function updateProgress() {
     document.getElementById('progress-fill').style.width = `${percentage}%`;
 }
 
-// ОБНОВЛЕННАЯ ФУНКЦИЯ ВОСПРОИЗВЕДЕНИЯ С БЛОКИРОВКОЙ КНОПКИ
+// ВОСПРОИЗВЕДЕНИЕ АУДИО С ИЗМЕНЕНИЕМ ЦВЕТА И ИКОНКИ ДИНАМИКА
 function playAudio(dayNumber, btnElement) {
     const audio = new Audio(`audio${dayNumber}.m4a`);
 
-    // Делаем кнопку неактивной на время воспроизведения
     if (btnElement) {
         btnElement.disabled = true;
+        btnElement.classList.add('playing');
+        btnElement.innerHTML = svgSpeakerIcon + ' СЛУШАТЬ ЗАДАНИЕ';
     }
 
     audio.play().catch(() => {
         alert(`Аудио файл audio${dayNumber}.m4a пока не добавлен в папку.`);
-        if (btnElement) {
-            btnElement.disabled = false;
-        }
+        resetAudioButton(btnElement);
     });
 
-    // Возвращаем активность кнопке по окончании трека
     audio.addEventListener('ended', () => {
-        if (btnElement) {
-            btnElement.disabled = false;
-        }
+        resetAudioButton(btnElement);
     });
 
     audio.addEventListener('pause', () => {
-        if (btnElement && (audio.currentTime === 0 || audio.ended)) {
-            btnElement.disabled = false;
+        if (audio.currentTime === 0 || audio.ended) {
+            resetAudioButton(btnElement);
         }
     });
+}
+
+function resetAudioButton(btnElement) {
+    if (btnElement) {
+        btnElement.disabled = false;
+        btnElement.classList.remove('playing');
+        btnElement.innerHTML = svgPlayIcon + ' СЛУШАТЬ ЗАДАНИЕ';
+    }
 }
 
 let activeCards = [];
