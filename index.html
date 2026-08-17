@@ -184,7 +184,6 @@
             background: #F8F9FA;
         }
 
-        /* НЕЗАМЕТНАЯ КНОПКА СО СКРУГЛЕННЫМИ УГЛАМИ ДЛЯ НАСТРОЕК */
         .parents-settings-wrap {
             text-align: center;
         }
@@ -373,47 +372,103 @@
             color: var(--btn-text-dark);
         }
 
-        /* КНОПКА АУДИО */
+        /* УВЕЛИЧЕННАЯ ШИРОКАЯ КНОПКА С АУДИОПЛЕЕРОМ ВНУТРИ */
+        .audio-player-wrapper {
+            margin-bottom: 10px;
+        }
+
         .btn-audio {
             width: 100%;
             background: var(--turquoise-accent);
             color: var(--btn-text-dark);
             border: none;
-            padding: 12px;
-            border-radius: 12px;
+            padding: 14px 20px;
+            border-radius: 14px;
             font-weight: 800;
             font-size: 14px;
             cursor: pointer;
             display: flex;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
-            gap: 8px;
-            margin-bottom: 10px;
+            gap: 10px;
             box-shadow: 0 4px 10px rgba(104, 196, 198, 0.25);
             transition: transform 0.1s ease, background-color 0.3s ease, opacity 0.2s ease, box-shadow 0.3s ease;
         }
 
-        /* Состояние воспроизведения (зеленая кнопка) */
         .btn-audio.playing {
             background: var(--pastel-green) !important;
             box-shadow: 0 4px 10px rgba(92, 219, 149, 0.3) !important;
         }
 
-        /* Анимация нажатия */
         .btn-audio:active:not(:disabled) {
-            transform: scale(0.95);
+            transform: scale(0.98);
         }
 
-        /* Неактивное состояние (пока играет аудио) */
         .btn-audio:disabled {
             cursor: not-allowed;
-            opacity: 0.85;
+            opacity: 0.9;
             transform: none;
+        }
+
+        .audio-btn-content {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
         }
 
         .btn-audio .svg-icon {
             width: 22px;
             height: 22px;
+        }
+
+        /* ПОЛОСКА ПРОГРЕССА С ТОЧКОЙ И ТАЙМЕРОМ ВНУТРИ КНОПКИ */
+        .audio-progress-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            width: 100%;
+            max-width: 320px;
+            margin: 0 auto;
+        }
+
+        .audio-track-bar {
+            flex: 1;
+            height: 5px;
+            background: rgba(26, 54, 54, 0.15);
+            border-radius: 3px;
+            position: relative;
+        }
+
+        .audio-track-fill {
+            width: 0%;
+            height: 100%;
+            background: var(--btn-text-dark);
+            border-radius: 3px;
+            position: relative;
+            transition: width 0.1s linear;
+        }
+
+        .audio-track-dot {
+            position: absolute;
+            right: -6px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 12px;
+            height: 12px;
+            background: var(--btn-text-dark);
+            border-radius: 50%;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+        }
+
+        .audio-timer {
+            font-size: 12px;
+            font-weight: 800;
+            color: var(--btn-text-dark);
+            min-width: 36px;
+            text-align: right;
         }
 
         /* КНОПКА ВСЕ СДЕЛАНО */
@@ -671,7 +726,6 @@ const svgSparklyTrophy = `
 
 const svgQuestionCard = `<svg class="memory-q-icon" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 16h-2v-2h2v2zm1.07-7.75l-.9.92C12.45 11.9 12 12.5 12 14h-2v-.5c0-1.1.45-2.1 1.17-2.83l1.24-1.26c.37-.36.59-.86.59-1.41 0-1.1-.9-2-2-2s-2 .9-2 2H7c0-2.76 2.24-5 5-5s5 2.24 5 5c0 1.04-.42 1.99-1.07 2.75z"/></svg>`;
 
-// Иконки для аудиоплеера
 const svgPlayIcon = `<svg class="svg-icon" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>`;
 const svgSpeakerIcon = `<svg class="svg-icon" viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>`;
 
@@ -786,10 +840,22 @@ function renderTracker() {
             ${data.day === 30 ? renderColoringHtml() : ''}
         ` : `
             ${data.day <= 28 ? `
-                <button class="btn-audio" onclick="playAudio(${data.day}, this)">
-                    <svg class="svg-icon" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
-                    СЛУШАТЬ ЗАДАНИЕ
-                </button>
+                <div class="audio-player-wrapper">
+                    <button class="btn-audio" onclick="playAudio(${data.day}, this)">
+                        <div class="audio-btn-content" id="audio-btn-content-${data.day}">
+                            <svg class="svg-icon" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                            <span>СЛУШАТЬ ЗАДАНИЕ</span>
+                        </div>
+                        <div class="audio-progress-container" id="audio-progress-${data.day}" style="display: none;">
+                            <div class="audio-track-bar">
+                                <div class="audio-track-fill" id="audio-fill-${data.day}">
+                                    <div class="audio-track-dot"></div>
+                                </div>
+                            </div>
+                            <div class="audio-timer" id="audio-timer-${data.day}">0:00</div>
+                        </div>
+                    </button>
+                </div>
             ` : ''}
         `;
 
@@ -975,38 +1041,91 @@ function updateProgress() {
     document.getElementById('progress-fill').style.width = `${percentage}%`;
 }
 
-// ВОСПРОИЗВЕДЕНИЕ АУДИО С ИЗМЕНЕНИЕМ ЦВЕТА И ИКОНКИ ДИНАМИКА
+let currentAudio = null;
+let currentAudioInterval = null;
+let activeAudioBtn = null;
+let activeDayNum = null;
+
 function playAudio(dayNumber, btnElement) {
+    if (currentAudio) {
+        currentAudio.pause();
+        currentAudio.currentTime = 0;
+        if (activeAudioBtn && activeDayNum !== null) {
+            resetAudioButton(activeAudioBtn, activeDayNum);
+        }
+        if (currentAudioInterval) clearInterval(currentAudioInterval);
+    }
+
     const audio = new Audio(`audio${dayNumber}.m4a`);
+    currentAudio = audio;
+    activeAudioBtn = btnElement;
+    activeDayNum = dayNumber;
+
+    const btnContent = document.getElementById(`audio-btn-content-${dayNumber}`);
+    const progressContainer = document.getElementById(`audio-progress-${dayNumber}`);
+    const fillElement = document.getElementById(`audio-fill-${dayNumber}`);
+    const timerElement = document.getElementById(`audio-timer-${dayNumber}`);
+
+    if (progressContainer) progressContainer.style.display = 'flex';
 
     if (btnElement) {
         btnElement.disabled = true;
         btnElement.classList.add('playing');
-        btnElement.innerHTML = svgSpeakerIcon + ' СЛУШАТЬ ЗАДАНИЕ';
+        if (btnContent) {
+            btnContent.innerHTML = `${svgSpeakerIcon} <span>СЛУШАТЬ ЗАДАНИЕ</span>`;
+        }
     }
 
-    audio.play().catch(() => {
+    audio.play().then(() => {
+        currentAudioInterval = setInterval(() => {
+            if (audio.ended || audio.paused) return;
+            const duration = audio.duration || 0;
+            const currentTime = audio.currentTime || 0;
+            const progress = duration > 0 ? (currentTime / duration) * 100 : 0;
+            
+            if (fillElement) fillElement.style.width = `${progress}%`;
+
+            // Обратный отсчет (мин:сек)
+            const remaining = Math.max(0, duration - currentTime);
+            const mins = Math.floor(remaining / 60);
+            const secs = Math.floor(remaining % 60);
+            if (timerElement) {
+                timerElement.textContent = `${mins}:${secs < 10 ? '0' : ''}${secs}`;
+            }
+        }, 100);
+    }).catch(() => {
         alert(`Аудио файл audio${dayNumber}.m4a пока не добавлен в папку.`);
-        resetAudioButton(btnElement);
+        resetAudioButton(btnElement, dayNumber);
     });
 
     audio.addEventListener('ended', () => {
-        resetAudioButton(btnElement);
+        if (currentAudioInterval) clearInterval(currentAudioInterval);
+        resetAudioButton(btnElement, dayNumber);
     });
 
     audio.addEventListener('pause', () => {
         if (audio.currentTime === 0 || audio.ended) {
-            resetAudioButton(btnElement);
+            if (currentAudioInterval) clearInterval(currentAudioInterval);
+            resetAudioButton(btnElement, dayNumber);
         }
     });
 }
 
-function resetAudioButton(btnElement) {
+function resetAudioButton(btnElement, dayNumber) {
     if (btnElement) {
         btnElement.disabled = false;
         btnElement.classList.remove('playing');
-        btnElement.innerHTML = svgPlayIcon + ' СЛУШАТЬ ЗАДАНИЕ';
+        const btnContent = document.getElementById(`audio-btn-content-${dayNumber}`);
+        if (btnContent) {
+            btnContent.innerHTML = `${svgPlayIcon} <span>СЛУШАТЬ ЗАДАНИЕ</span>`;
+        }
     }
+    const progressContainer = document.getElementById(`audio-progress-${dayNumber}`);
+    if (progressContainer) progressContainer.style.display = 'none';
+    const fillElement = document.getElementById(`audio-fill-${dayNumber}`);
+    if (fillElement) fillElement.style.width = '0%';
+    const timerElement = document.getElementById(`audio-timer-${dayNumber}`);
+    if (timerElement) timerElement.textContent = '0:00';
 }
 
 let activeCards = [];
