@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>МОДУЛЬ 1</title>
+    <!-- ИКОНКА (ФАВИКОН) ВО ВКЛАДКЕ БРАУЗЕРА -->
     <link rel="icon" type="image/png" href="logo.png">
     
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
@@ -148,33 +149,30 @@
             text-align: center;
         }
 
-        /* БЛОК СИММЕТРИЧНЫХ КНОПОК В ШАПКЕ */
+        /* БЛОК ЦЕНТРИРОВАННОЙ КНОПКИ В ШАПКЕ */
         .header-buttons {
             display: flex;
-            flex-direction: row;
             justify-content: center;
-            align-items: stretch;
-            gap: 10px;
+            align-items: center;
             margin-bottom: 12px;
             width: 100%;
-            flex-wrap: wrap;
         }
 
         .header-action-btn {
-            flex: 1;
-            min-width: 200px;
+            width: 100%;
+            max-width: 320px;
             background: #FFFFFF;
             border: none;
             color: var(--header-text-unified);
-            padding: 10px 10px;
+            padding: 10px 15px;
             border-radius: 12px;
-            font-size: 12px;
+            font-size: 13px;
             font-weight: 700;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 6px;
+            gap: 8px;
             box-shadow: 0 2px 6px rgba(0,0,0,0.08);
             transition: background 0.2s ease;
             text-decoration: none;
@@ -652,11 +650,6 @@
                 <svg class="svg-icon" style="width: 14px; height: 14px;" viewBox="0 0 24 24"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>
                 Скопировать ссылку с прогрессом
             </button>
-
-            <a class="header-action-btn" href="https://t.me/tati_khi" target="_blank" rel="noopener noreferrer">
-                <svg class="svg-icon" style="width: 15px; height: 15px;" viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
-                Написать педагогу / Личное сопровождение
-            </a>
         </div>
 
         <div class="parents-settings-wrap">
