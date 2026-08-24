@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>МОДУЛЬ 1</title>
-    <!-- ИКОНКА (ФАВИКОН) ВО ВКЛАДКЕ БРАУЗЕРА -->
     <link rel="icon" type="image/png" href="logo.png">
     
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
@@ -671,7 +670,7 @@
             </div>
         </div>
 
-        <div class="marathon-banner">МОДУЛЬ 1 • 30 ДНЕЙ ПРИКЛЮЧЕНИЙ</div>
+        <div class="marathon-banner">МОДУЛЬ 1 • МЯГКИЙ СТАРТ</div>
     </div>
 
     <div id="days-container"></div>
@@ -754,15 +753,15 @@ const daysData = [
     { day: 18, week: 3, title: "ДЕНЬ 18 : НОС (NOSE)", parentText: "Родителям: включите аудио. Задача — наморщить нос и повторить слово за педагогом." },
     { day: 19, week: 3, title: "ДЕНЬ 19 : ГЛАЗА (EYES)", parentText: "Родителям: включите аудио. Задача — поморгать и повторить слово за педагогом." },
     { day: 20, week: 3, title: "ДЕНЬ 20 : УШИ (EARS)", parentText: "Родителям: включите аудио. Задача — потрогать уши и повторить слово за педагогом." },
-    { day: 21, week: 3, title: "ДЕНЬ 21 : ЛИЦО (FACE)", parentText: "Родителям: включите аудио. Задача — состроить рожицу и повторить слово за педагогом." },
+    { day: 21, week: 3, title: "ДЕНЬ 21 : РОТ (MOUTH)", parentText: "Родителям: включите аудио. Задача - улыбнуться и повторить слово за педагогом." },
 
-    { day: 22, week: 4, title: "ДЕНЬ 22 : ЛЕВ (LION)", parentText: "Родителям: включите аудио. Задача — изобразить льва и повторить слово за педагогом." },
-    { day: 23, week: 4, title: "ДЕНЬ 23 : ОБЕЗЬЯНА (MONKEY)", parentText: "Родителям: включите аудио. Задача — изобразить обезьянку и повторить слово за педагогом." },
-    { day: 24, week: 4, title: "ДЕНЬ 24 : МЕДВЕДЬ (BEAR)", parentText: "Родителям: включите аудио. Задача — изобразить медведя и повторить слово за педагогом." },
-    { day: 25, week: 4, title: "ДЕНЬ 25 : ЗАЯЦ (RABBIT)", parentText: "Родителям: включите аудио. Задача — изобразить зайца и повторить слово за педагогом." },
-    { day: 26, week: 4, title: "ДЕНЬ 26 : СЛОН (ELEPHANT)", parentText: "Родителям: включите аудио. Задача — изобразить слона и повторить слово за педагогом." },
-    { day: 27, week: 4, title: "ДЕНЬ 27 : ТИГР (TIGER)", parentText: "Родителям: включите аудио. Задача — изобразить тигра и повторить слово за педагогом." },
-    { day: 28, week: 4, title: "ДЕНЬ 28 : СОБАКА (DOG)", parentText: "Родителям: включите аудио. Задача — изобразить собаку и повторить слово за педагогом." },
+    { day: 22, week: 4, title: "ДЕНЬ 22 : СОБАКА (DOG)", parentText: "Родителям: включите аудио. Задача — изобразить собаку и повторить слово за педагогом." },
+    { day: 23, week: 4, title: "ДЕНЬ 23 : КОТ (CAT)", parentText: "Родителям: включите аудио. Задача - изобразить кота и повторить слово за педагогом." },
+    { day: 24, week: 4, title: "ДЕНЬ 24 : ПТИЦА (BIRD)", parentText: "Родителям: включите аудио. Задача - изобразить птицу и повторить слово за педагогом." },
+    { day: 25, week: 4, title: "ДЕНЬ 25 : ЛЕВ (LION)", parentText: "Родителям: включите аудио. Задача — изобразить льва и повторить слово за педагогом." },
+    { day: 26, week: 4, title: "ДЕНЬ 26 : ОБЕЗЬЯНА (MONKEY)", parentText: "Родителям: включите аудио. Задача — изобразить обезьянку и повторить слово за педагогом." },
+    { day: 27, week: 4, title: "ДЕНЬ 27 : МЕДВЕДЬ (BEAR)", parentText: "Родителям: включите аудио. Задача — изобразить медведя и повторить слово за педагогом." },
+    { day: 28, week: 4, title: "ДЕНЬ 28 : ЗАЯЦ (RABBIT)", parentText: "Родителям: включите аудио. Задача — изобразить зайца и повторить слово за педагогом." },
 
     { day: 29, week: 5, isBonus: true, title: "ДЕНЬ 29 : МИНИ-ИГРА «МЕМОРИ» (НАЙДИ ПАРУ)", parentText: "Родителям: переворачивайте карточки и находите одинаковые пары «слово+картинка»." },
     { day: 30, week: 5, isBonus: true, title: "ДЕНЬ 30 : ТВОРЧЕСКОЕ ЗАДАНИЕ «РАСКРАСКА»", parentText: "Родителям: финальное творческое задание!" }
@@ -837,7 +836,6 @@ function renderTracker() {
         card.className = `day-card ${data.isBonus ? 'bonus-card' : ''} ${isCompleted ? 'completed' : ''} ${isActive && !isCompleted ? 'active' : ''} ${!isActive ? 'disabled' : ''}`;
 
         const bodyContent = data.isBonus ? `
-            ${data.day === 29 ? '<div class="bonus-centered-text">Найдите все парные карточки!</div>' : ''}
             ${data.day === 29 ? renderMemoryGameHtml() : ''}
             ${data.day === 30 ? renderColoringHtml() : ''}
         ` : `
@@ -1305,7 +1303,7 @@ function generateCertificate() {
                         <path d="M20.5 1.5l.5 1.2 1.2.5-1.2.5-.5 1.2-.5-1.2-1.2-.5 1.2-.5z" fill="#F1C40F"/>
                     </svg>
                     <div style="width: 100%; font-size: 24px; font-weight: 900; color: #50A3A6; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 2px; text-align: center; white-space: nowrap;">СЕРТИФИКАТ ПОБЕДИТЕЛЯ</div>
-                    <div style="font-size: 11px; font-weight: 700; color: #7F8C8D; text-align: center;">За прохождение 1 модуля «30 ДНЕЙ ПРИКЛЮЧЕНИЙ»!</div>
+                    <div style="font-size: 11px; font-weight: 700; color: #7F8C8D; text-align: center;">За прохождение 1 модуля «МЯГКИЙ СТАРТ»!</div>
                 </div>
 
                 <div style="display: flex; justify-content: center; align-items: center;">
