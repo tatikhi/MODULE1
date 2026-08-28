@@ -730,38 +730,41 @@ const svgQuestionCard = `<svg class="memory-q-icon" viewBox="0 0 24 24"><path d=
 const svgPlayIcon = `<svg class="svg-icon" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>`;
 const svgSpeakerIcon = `<svg class="svg-icon" viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>`;
 
+const textParentMovement = "Родителям: Включите аудио и выполняйте действия вместе с малышом! Вы — его главный пример. Заставлять ребенка повторять английские слова не нужно, просто веселитесь и хвалите его за движения.";
+const textParentColor = "Родителям: Слушайте команду и вместе с ребенком ищите нужный предмет в комнате. Покажите пример: дотроньтесь до вещи первым и эмоционально поддержите малыша, когда он сделает то же самое!";
+
 const daysData = [
-    { day: 1, week: 1, title: "ДЕНЬ 1 : КРАСНЫЙ (RED)", parentText: "Родителям: включите аудио. Задача — быстро найти красный предмет и повторить слово за педагогом." },
-    { day: 2, week: 1, title: "ДЕНЬ 2 : СИНИЙ (BLUE)", parentText: "Родителям: включите аудио. Задача — быстро найти синий предмет и повторить слово за педагогом." },
-    { day: 3, week: 1, title: "ДЕНЬ 3 : ЖЁЛТЫЙ (YELLOW)", parentText: "Родителям: включите аудио. Задача — быстро найти желтый предмет и повторить слово за педагогом." },
-    { day: 4, week: 1, title: "ДЕНЬ 4 : ЗЕЛЁНЫЙ (GREEN)", parentText: "Родителям: включите аудио. Задача — быстро найти зеленый предмет и повторить слово за педагогом." },
-    { day: 5, week: 1, title: "ДЕНЬ 5 : ОРАНЖЕВЫЙ (ORANGE)", parentText: "Родителям: включите аудио. Задача — быстро найти оранжевый предмет и повторить слово за педагогом." },
-    { day: 6, week: 1, title: "ДЕНЬ 6 : РОЗОВЫЙ (PINK)", parentText: "Родителям: включите аудио. Задача — быстро найти розовый предмет и повторить слово за педагогом." },
-    { day: 7, week: 1, title: "ДЕНЬ 7 : КОРИЧНЕВЫЙ (BROWN)", parentText: "Родителям: включите аудио. Задача — быстро найти коричневый предмет и повторить слово за педагогом." },
+    { day: 1, week: 1, title: "ДЕНЬ 1 : RUN", parentText: textParentMovement },
+    { day: 2, week: 1, title: "ДЕНЬ 2 : STOP", parentText: textParentMovement },
+    { day: 3, week: 1, title: "ДЕНЬ 3 : WALK", parentText: textParentMovement },
+    { day: 4, week: 1, title: "ДЕНЬ 4 : STOMP", parentText: textParentMovement },
+    { day: 5, week: 1, title: "ДЕНЬ 5 : CLAP", parentText: textParentMovement },
+    { day: 6, week: 1, title: "ДЕНЬ 6 : FLY", parentText: textParentMovement },
+    { day: 7, week: 1, title: "ДЕНЬ 7 : JUMP", parentText: textParentMovement },
 
-    { day: 8, week: 2, title: "ДЕНЬ 8 : БЕГАТЬ (RUN)", parentText: "Родителям: включите аудио. Задача — побегать и повторить слово за педагогом." },
-    { day: 9, week: 2, title: "ДЕНЬ 9 : ОСТАНОВИТЬСЯ (STOP)", parentText: "Родителям: включите аудио. Задача — после активного движения замереть и повторить слово за педагогом." },
-    { day: 10, week: 2, title: "ДЕНЬ 10 : ШАГАТЬ (WALK)", parentText: "Родителям: включите аудио. Задача — пошагать и повторить слово за педагогом." },
-    { day: 11, week: 2, title: "ДЕНЬ 11 : ТОПАТЬ (STOMP)", parentText: "Родителям: включите аудио. Задача — потопать ножками и повторить слово за педагогом." },
-    { day: 12, week: 2, title: "ДЕНЬ 12 : ХЛОПАТЬ (CLAP)", parentText: "Родителям: включите аудио. Задача — похлопать в ладоши и повторить слово за педагогом." },
-    { day: 13, week: 2, title: "ДЕНЬ 13 : ЛЕТАТЬ (FLY)", parentText: "Родителям: включите аудио. Задача — помахать руками как птица и повторить слово за педагогом." },
-    { day: 14, week: 2, title: "ДЕНЬ 14 : ПРЫГАТЬ (JUMP)", parentText: "Родителям: включите аудио. Задача — попрыгать и повторить слово за педагогом." },
+    { day: 8, week: 2, title: "ДЕНЬ 8 : HANDS", parentText: textParentMovement },
+    { day: 9, week: 2, title: "ДЕНЬ 9 : FEET", parentText: textParentMovement },
+    { day: 10, week: 2, title: "ДЕНЬ 10 : HEAD", parentText: textParentMovement },
+    { day: 11, week: 2, title: "ДЕНЬ 11 : NOSE", parentText: textParentMovement },
+    { day: 12, week: 2, title: "ДЕНЬ 12 : EYES", parentText: textParentMovement },
+    { day: 13, week: 2, title: "ДЕНЬ 13 : EARS", parentText: textParentMovement },
+    { day: 14, week: 2, title: "ДЕНЬ 14 : MOUTH", parentText: textParentMovement },
 
-    { day: 15, week: 3, title: "ДЕНЬ 15 : РУКИ (HANDS)", parentText: "Родителям: включите аудио. Задача — вытянуть/поднять руки и повторить слово за педагогом." },
-    { day: 16, week: 3, title: "ДЕНЬ 16 : НОГИ (FEET)", parentText: "Родителям: включите аудио. Задача — поболтать ногами и повторить слово за педагогом." },
-    { day: 17, week: 3, title: "ДЕНЬ 17 : ГОЛОВА (HEAD)", parentText: "Родителям: включите аудио. Задача — дотронуться до головы и повторить слово за педагогом." },
-    { day: 18, week: 3, title: "ДЕНЬ 18 : НОС (NOSE)", parentText: "Родителям: включите аудио. Задача — наморщить нос и повторить слово за педагогом." },
-    { day: 19, week: 3, title: "ДЕНЬ 19 : ГЛАЗА (EYES)", parentText: "Родителям: включите аудио. Задача — поморгать и повторить слово за педагогом." },
-    { day: 20, week: 3, title: "ДЕНЬ 20 : УШИ (EARS)", parentText: "Родителям: включите аудио. Задача — потрогать уши и повторить слово за педагогом." },
-    { day: 21, week: 3, title: "ДЕНЬ 21 : РОТ (MOUTH)", parentText: "Родителям: включите аудио. Задача - улыбнуться и повторить слово за педагогом." },
+    { day: 15, week: 3, title: "ДЕНЬ 15 : DOG", parentText: textParentMovement },
+    { day: 16, week: 3, title: "ДЕНЬ 16 : CAT", parentText: textParentMovement },
+    { day: 17, week: 3, title: "ДЕНЬ 17 : BIRD", parentText: textParentMovement },
+    { day: 18, week: 3, title: "ДЕНЬ 18 : LION", parentText: textParentMovement },
+    { day: 19, week: 3, title: "ДЕНЬ 19 : MONKEY", parentText: textParentMovement },
+    { day: 20, week: 3, title: "ДЕНЬ 20 : BEAR", parentText: textParentMovement },
+    { day: 21, week: 3, title: "ДЕНЬ 21 : RABBIT", parentText: textParentMovement },
 
-    { day: 22, week: 4, title: "ДЕНЬ 22 : СОБАКА (DOG)", parentText: "Родителям: включите аудио. Задача — изобразить собаку и повторить слово за педагогом." },
-    { day: 23, week: 4, title: "ДЕНЬ 23 : КОТ (CAT)", parentText: "Родителям: включите аудио. Задача - изобразить кота и повторить слово за педагогом." },
-    { day: 24, week: 4, title: "ДЕНЬ 24 : ПТИЦА (BIRD)", parentText: "Родителям: включите аудио. Задача - изобразить птицу и повторить слово за педагогом." },
-    { day: 25, week: 4, title: "ДЕНЬ 25 : ЛЕВ (LION)", parentText: "Родителям: включите аудио. Задача — изобразить льва и повторить слово за педагогом." },
-    { day: 26, week: 4, title: "ДЕНЬ 26 : ОБЕЗЬЯНА (MONKEY)", parentText: "Родителям: включите аудио. Задача — изобразить обезьянку и повторить слово за педагогом." },
-    { day: 27, week: 4, title: "ДЕНЬ 27 : МЕДВЕДЬ (BEAR)", parentText: "Родителям: включите аудио. Задача — изобразить медведя и повторить слово за педагогом." },
-    { day: 28, week: 4, title: "ДЕНЬ 28 : ЗАЯЦ (RABBIT)", parentText: "Родителям: включите аудио. Задача — изобразить зайца и повторить слово за педагогом." },
+    { day: 22, week: 4, title: "ДЕНЬ 22 : RED", parentText: textParentColor },
+    { day: 23, week: 4, title: "ДЕНЬ 23 : BLUE", parentText: textParentColor },
+    { day: 24, week: 4, title: "ДЕНЬ 24 : YELLOW", parentText: textParentColor },
+    { day: 25, week: 4, title: "ДЕНЬ 25 : GREEN", parentText: textParentColor },
+    { day: 26, week: 4, title: "ДЕНЬ 26 : ORANGE", parentText: textParentColor },
+    { day: 27, week: 4, title: "ДЕНЬ 27 : PINK", parentText: textParentColor },
+    { day: 28, week: 4, title: "ДЕНЬ 28 : BROWN", parentText: textParentColor },
 
     { day: 29, week: 5, isBonus: true, title: "ДЕНЬ 29 : МИНИ-ИГРА «МЕМОРИ» (НАЙДИ ПАРУ)", parentText: "Родителям: переворачивайте карточки и находите одинаковые пары «слово+картинка»." },
     { day: 30, week: 5, isBonus: true, title: "ДЕНЬ 30 : ТВОРЧЕСКОЕ ЗАДАНИЕ «РАСКРАСКА»", parentText: "Родителям: финальное творческое задание!" }
@@ -814,7 +817,7 @@ function renderTracker() {
     daysData.forEach((data) => {
         if (data.week !== currentWeek && !data.isBonus) {
             currentWeek = data.week;
-            const weekTitlesMap = ["", "НЕДЕЛЯ 1 : ЦВЕТА", "НЕДЕЛЯ 2 : ДВИЖЕНИЕ", "НЕДЕЛЯ 3 : ЧАСТИ ТЕЛА", "НЕДЕЛЯ 4 : ЖИВОТНЫЕ"];
+            const weekTitlesMap = ["", "НЕДЕЛЯ 1 : ДВИЖЕНИЕ", "НЕДЕЛЯ 2 : ЧАСТИ ТЕЛА", "НЕДЕЛЯ 3 : ЖИВОТНЫЕ", "НЕДЕЛЯ 4 : ЦВЕТА"];
             
             const weekTitle = document.createElement('div');
             weekTitle.className = 'week-title';
