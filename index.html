@@ -808,14 +808,12 @@ const daysData = [
     { day: 30, week: 5, isBonus: true, title: "ДЕНЬ 30 : РАСКРАСКА", parentText: "Родителям: финальное творческое задание!" }
 ];
 
-/* ===== БЕЗОПАСНАЯ ОБРАБОТКА ДАННЫХ ИЗ ССЫЛКИ ===== */
 const urlParams = new URLSearchParams(window.location.search);
 const rawName = urlParams.get('name');
 const rawAge = urlParams.get('age');
 const rawKey = urlParams.get('key'); 
 const urlProgress = urlParams.get('p');
 
-// Убрали функцию декодирования, которая ломала сайт в Safari при передаче некоторых символов
 const safeName = (rawName && typeof rawName === 'string') ? rawName.trim() : '';
 const docId = safeName !== '' ? safeName : 'СУПЕРГЕРОЙ';
 const displayName = docId.split(/[_\-\s]+/)[0].toUpperCase();
@@ -835,19 +833,15 @@ const STORAGE_KEY = `tracker_progress_${docId}`;
 const MEMORY_LAYOUT_KEY = `tracker_memory_layout_${docId}`;
 const MEMORY_MATCHED_KEY = `tracker_memory_matched_${docId}`;
 
-/* ===== БЕЗОПАСНАЯ ОБРАБОТКА КЭША (localStorage) ===== */
 let completedDays = [];
 
 if (urlProgress) {
     try {
         completedDays = urlProgress.split(',').map(Number).filter(n => !isNaN(n) && n >= 1 && n <= 30);
         localStorage.setItem(STORAGE_KEY, JSON.stringify(completedDays));
-    } catch(e) {
-        console.warn("Storage restricted", e);
-    }
+    } catch(e) {}
 }
 
-// Защита от испорченных данных или режима инкогнито
 if (!completedDays || completedDays.length === 0) {
     try {
         const parsed = JSON.parse(localStorage.getItem(STORAGE_KEY));
@@ -865,7 +859,6 @@ try {
     matchedMemoryKeys = [];
 }
 
-/* ===== ГЕНЕРАЦИЯ ДНЕЙ ===== */
 function renderTracker() {
     const container = document.getElementById('days-container');
     container.innerHTML = '';
@@ -960,9 +953,7 @@ function toggleDay(day, event) {
         completedDays.push(day);
         try {
             localStorage.setItem(STORAGE_KEY, JSON.stringify(completedDays));
-        } catch(e) {
-            console.warn(e);
-        }
+        } catch(e) {}
         launchConfetti(event);
         renderTracker();
     }
@@ -1132,18 +1123,20 @@ function closeAccessModal() {
     if (modal) modal.style.display = 'none';
 }
 
-/* ===== ПРОВЕРКА ДОСТУПА В ТАБЛИЦЕ (ИМЯ + ВОЗРАСТ + КЛЮЧ) ===== */
+// Проверка доступа и запуск аудио с исправленным возвратом текста кнопки
 async function playAudio(dayNumber, btnElement) {
     if (!safeName || safeName === '' || !rawAge || isNaN(rawAge)) {
         showAccessModal();
         return;
     }
 
-    const originalContent = btnElement.innerHTML;
     btnElement.disabled = true;
-    btnElement.innerHTML = `<div class="audio-btn-content">⏳ Проверка доступа...</div>`;
+    const btnContentEl = document.getElementById(`audio-btn-content-${dayNumber}`);
+    if (btnContentEl) {
+        btnContentEl.innerHTML = `⏳ Проверка доступа...`;
+    }
 
-    // Ссылка на обновленный скрипт Google
+    // Ссылка на Google Apps Script (можете менять её в этой строке)
     const scriptURL = 'https://script.google.com/macros/s/AKfycbycTxjur2q7eoRuqGDQXG1UOjWgZJL14fzVGUz5vhXf96i5QDCYJ31aSOaLAinoSQ4cPQ/exec';
 
     try {
@@ -1153,14 +1146,18 @@ async function playAudio(dayNumber, btnElement) {
 
         if (!data.success) {
             btnElement.disabled = false;
-            btnElement.innerHTML = originalContent;
+            if (btnContentEl) {
+                btnContentEl.innerHTML = `${svgPlayIcon} <span>СЛУШАТЬ ЗАДАНИЕ</span>`;
+            }
             showAccessModal();
             return;
         }
     } catch (error) {
         console.error("Ошибка проверки:", error);
         btnElement.disabled = false;
-        btnElement.innerHTML = originalContent;
+        if (btnContentEl) {
+            btnContentEl.innerHTML = `${svgPlayIcon} <span>СЛУШАТЬ ЗАДАНИЕ</span>`;
+        }
         alert("Не удалось проверить доступ. Проверьте интернет-соединение.");
         return;
     }
@@ -1179,7 +1176,6 @@ async function playAudio(dayNumber, btnElement) {
     activeAudioBtn = btnElement;
     activeDayNum = dayNumber;
 
-    const btnContent = document.getElementById(`audio-btn-content-${dayNumber}`);
     const progressContainer = document.getElementById(`audio-progress-${dayNumber}`);
     const fillElement = document.getElementById(`audio-fill-${dayNumber}`);
     const timerElement = document.getElementById(`audio-timer-${dayNumber}`);
@@ -1189,8 +1185,8 @@ async function playAudio(dayNumber, btnElement) {
     if (btnElement) {
         btnElement.disabled = true;
         btnElement.classList.add('playing');
-        if (btnContent) {
-            btnContent.innerHTML = `${svgSpeakerIcon} <span>СЛУШАТЬ ЗАДАНИЕ</span>`;
+        if (btnContentEl) {
+            btnContentEl.innerHTML = `${svgSpeakerIcon} <span>СЛУШАТЬ ЗАДАНИЕ</span>`;
         }
     }
 
@@ -1485,9 +1481,7 @@ function generateCertificate() {
     });
 }
 
-// Запуск инициализации в самом конце
 renderTracker();
-
 </script>
 </body>
 </html>
