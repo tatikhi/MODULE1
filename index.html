@@ -1115,13 +1115,13 @@ function closeAccessModal() {
     if (modal) modal.style.display = 'none';
 }
 
-// ПРОВЕРКА ДОСТУПА ЧЕРЕЗ GOOGLE ТАБЛИЦУ (ДЛЯ ДНЯ 1 И СЕРТИФИКАТА)
+// ПРОВЕРКА ДОСТУПА ЧЕРЕЗ GOOGLE ТАБЛИЦУ
 async function verifyAccessWithSheet() {
     if (!safeName || safeName === '' || !rawAge || isNaN(rawAge)) {
         return false;
     }
 
-    // Ссылка на ваш Google Apps Script
+    // Ссылка на ваш Google Apps Script (можете менять её в этой строке)
     const scriptURL = 'https://script.google.com/macros/s/AKfycbycTxjur2q7eoRuqGDQXG1UOjWgZJL14fzVGUz5vhXf96i5QDCYJ31aSOaLAinoSQ4cPQ/exec';
 
     try {
@@ -1136,7 +1136,6 @@ async function verifyAccessWithSheet() {
 }
 
 async function playAudio(dayNumber, btnElement) {
-    // Проверка доступа требуется только для Дня 1. Остальные дни воспроизводятся сразу.
     if (dayNumber === 1) {
         btnElement.disabled = true;
         const btnContentEl = document.getElementById(`audio-btn-content-${dayNumber}`);
@@ -1365,7 +1364,7 @@ function openAndPrintColoring() {
     }
 }
 
-// ГЕНЕРАЦИЯ СЕРТИФИКАТА С ЖЕСТКОЙ ПРОВЕРКОЙ ЧЕРЕЗ ТАБЛИЦУ
+// ГЕНЕРАЦИЯ СЕРТИФИКАТА С СТРОГОЙ ПРОВЕРКОЙ ЧЕРЕЗ ТАБЛИЦУ
 async function generateCertificate() {
     const btn = document.getElementById('cert-btn');
     const originalBtnText = btn.textContent;
