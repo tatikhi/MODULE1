@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -1087,7 +1088,18 @@ function launchConfetti(event) {
     animate();
 }
 
-updateProgress();
+function updateProgress() {
+    const total = 30;
+    const uniqueCompleted = [...new Set(completedDays)].filter(n => n >= 1 && n <= 30);
+    const current = uniqueCompleted.length;
+    const percentage = Math.round((current / total) * 100);
+
+    const txtEl = document.getElementById('progress-text');
+    const fillEl = document.getElementById('progress-fill');
+    
+    if (txtEl) txtEl.textContent = `${current} / ${total} заданий`;
+    if (fillEl) fillEl.style.width = `${percentage}%`;
+}
 
 let currentAudio = null;
 let currentAudioInterval = null;
@@ -1115,50 +1127,51 @@ function closeAccessModal() {
     if (modal) modal.style.display = 'none';
 }
 
-// ПРОВЕРКА ДОСТУПА ЧЕРЕЗ GOOGLE ТАБЛИЦУ
-async function verifyAccessWithSheet() {
-    if (!safeName || safeName === '' || !rawAge || isNaN(rawAge)) {
-        return false;
-    }
-
-    // Ссылка на ваш Google Apps Script (можете менять её в этой строке)
-    const scriptURL = 'https://script.google.com/macros/s/AKfycbycTxjur2q7eoRuqGDQXG1UOjWgZJL14fzVGUz5vhXf96i5QDCYJ31aSOaLAinoSQ4cPQ/exec';
-
-    try {
-        const queryStr = `?name=${encodeURIComponent(safeName)}&age=${encodeURIComponent(rawAge)}&key=${encodeURIComponent(rawKey || '')}`;
-        const response = await fetch(scriptURL + queryStr);
-        const data = await response.json();
-        return data.success === true;
-    } catch (error) {
-        console.error("Ошибка проверки:", error);
-        return false;
-    }
-}
-
+// ПРОВЕРКА ДОСТУПА ТОЛЬКО ДЛЯ ПЕРВОГО ДНЯ
 async function playAudio(dayNumber, btnElement) {
-    if (dayNumber === 1) {
+    const isAccessVerified = sessionStorage.getItem(`verified_${docId}`) === 'true';
+
+    if (dayNumber === 1 && !isAccessVerified) {
+        if (!safeName || safeName === '' || !rawAge || isNaN(rawAge)) {
+            showAccessModal(false);
+            return;
+        }
+
         btnElement.disabled = true;
         const btnContentEl = document.getElementById(`audio-btn-content-${dayNumber}`);
         if (btnContentEl) {
             btnContentEl.innerHTML = `⏳ Проверка доступа...`;
         }
 
-        const isAllowed = await verifyAccessWithSheet();
+        // Ссылка на Google Apps Script
+        const scriptURL = 'https://script.google.com/macros/s/AKfycbycTxjur2q7eoRuqGDQXG1UOjWgZJL14fzVGUz5vhXf96i5QDCYJ31aSOaLAinoSQ4cPQ/exec';
 
-        if (!isAllowed) {
+        try {
+            const queryStr = `?name=${encodeURIComponent(safeName)}&age=${encodeURIComponent(rawAge)}&key=${encodeURIComponent(rawKey || '')}`;
+            const response = await fetch(scriptURL + queryStr);
+            const data = await response.json();
+
+            if (!data.success) {
+                btnElement.disabled = false;
+                if (btnContentEl) {
+                    btnContentEl.innerHTML = `${svgPlayIcon} <span>СЛУШАТЬ ЗАДАНИЕ</span>`;
+                }
+                showAccessModal(false);
+                return;
+            }
+
+            sessionStorage.setItem(`verified_${docId}`, 'true');
+
+        } catch (error) {
+            console.error("Ошибка проверки:", error);
             btnElement.disabled = false;
             if (btnContentEl) {
                 btnContentEl.innerHTML = `${svgPlayIcon} <span>СЛУШАТЬ ЗАДАНИЕ</span>`;
             }
-            showAccessModal(false);
+            alert("Не удалось проверить доступ. Проверьте интернет-соединение.");
             return;
         }
-
-        if (btnContentEl) {
-            btnContentEl.innerHTML = `${svgPlayIcon} <span>СЛУШАТЬ ЗАДАНИЕ</span>`;
-        }
-        btnElement.disabled = false;
-    }
+    } 
 
     if (currentAudio) {
         currentAudio.pause();
@@ -1364,23 +1377,38 @@ function openAndPrintColoring() {
     }
 }
 
-// ГЕНЕРАЦИЯ СЕРТИФИКАТА С СТРОГОЙ ПРОВЕРКОЙ ЧЕРЕЗ ТАБЛИЦУ
+// ГЕНЕРАЦИЯ СЕРТИФИКАТА С ПРОВЕРКОЙ ВЕРИФИКАЦИИ
 async function generateCertificate() {
-    const btn = document.getElementById('cert-btn');
-    const originalBtnText = btn.textContent;
-    btn.textContent = '⏳ Проверка доступа...';
-    btn.style.pointerEvents = 'none';
+    const isAccessVerified = sessionStorage.getItem(`verified_${docId}`) === 'true';
 
-    const isAllowed = await verifyAccessWithSheet();
+    // Если в текущей сессии доступ не был подтвержден через Google Таблицу
+    if (!isAccessVerified) {
+        if (!safeName || safeName === '' || !rawAge || isNaN(rawAge)) {
+            showAccessModal(true);
+            return;
+        }
 
-    if (!isAllowed) {
-        btn.textContent = originalBtnText;
-        btn.style.pointerEvents = 'auto';
-        showAccessModal(true);
-        return;
+        // Делаем контрольный быстрый запрос к таблице прямо перед выдачей сертификата
+        const scriptURL = 'https://script.google.com/macros/s/AKfycbycTxjur2q7eoRuqGDQXG1UOjWgZJL14fzVGUz5vhXf96i5QDCYJ31aSOaLAinoSQ4cPQ/exec';
+        try {
+            const queryStr = `?name=${encodeURIComponent(safeName)}&age=${encodeURIComponent(rawAge)}&key=${encodeURIComponent(rawKey || '')}`;
+            const response = await fetch(scriptURL + queryStr);
+            const data = await response.json();
+
+            if (!data.success) {
+                showAccessModal(true);
+                return;
+            }
+            sessionStorage.setItem(`verified_${docId}`, 'true');
+        } catch (error) {
+            showAccessModal(true);
+            return;
+        }
     }
 
+    const btn = document.getElementById('cert-btn');
     btn.textContent = '⏳ Создаем сертификат...';
+    btn.style.pointerEvents = 'none';
 
     const now = new Date();
     const months = [
@@ -1462,7 +1490,7 @@ async function generateCertificate() {
     if (typeof html2canvas === 'undefined') {
         document.body.removeChild(tempDiv);
         alert("Библиотека html2canvas не загружена.");
-        btn.textContent = originalBtnText;
+        btn.textContent = 'СКАЧАТЬ ИМЕННОЙ СЕРТИФИКАТ';
         btn.style.pointerEvents = 'auto';
         return;
     }
@@ -1488,7 +1516,7 @@ async function generateCertificate() {
         document.body.removeChild(tempDiv);
         console.error(err);
         alert("Не удалось сгенерировать сертификат.");
-        btn.textContent = originalBtnText;
+        btn.textContent = 'СКАЧАТЬ ИМЕННОЙ СЕРТИФИКАТ';
         btn.style.pointerEvents = 'auto';
     });
 }
