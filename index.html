@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>МОДУЛЬ 1</title>
+    <!-- ИКОНКА (ФАВИКОН) ВО ВКЛАДКЕ БРАУЗЕРА -->
     <link rel="icon" type="image/png" href="logo.png">
     
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
@@ -597,6 +598,60 @@
             color: var(--btn-text-dark);
         }
 
+        /* МОДАЛЬНОЕ ОКНО ПРЕДУПРЕЖДЕНИЯ */
+        #access-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(44, 62, 80, 0.6);
+            z-index: 10000;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        .modal-content {
+            background: #FFFFFF;
+            max-width: 400px;
+            width: 100%;
+            padding: 25px;
+            border-radius: 24px;
+            text-align: center;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+            animation: modalPop 0.3s ease;
+        }
+        @keyframes modalPop {
+            0% { transform: scale(0.8); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        .modal-title {
+            font-size: 18px;
+            font-weight: 900;
+            color: #E56B6F;
+            margin-bottom: 12px;
+        }
+        .modal-text {
+            font-size: 14px;
+            font-weight: 700;
+            color: #2C3E50;
+            line-height: 1.5;
+            margin-bottom: 20px;
+        }
+        .modal-btn {
+            background: var(--turquoise-accent);
+            color: var(--btn-text-dark);
+            border: none;
+            padding: 12px 20px;
+            border-radius: 12px;
+            font-weight: 900;
+            font-size: 14px;
+            cursor: pointer;
+            width: 100%;
+            box-shadow: 0 4px 10px rgba(104, 196, 198, 0.3);
+        }
+
         /* FOOTER & КНОПКА СБРОСА */
         .footer {
             margin-top: 30px;
@@ -633,6 +688,18 @@
 <body>
 
 <canvas id="confetti-canvas"></canvas>
+
+<!-- КАСТОМНОЕ МОДАЛЬНОЕ ОКНО -->
+<div id="access-modal">
+    <div class="modal-content">
+        <div style="font-size: 36px; margin-bottom: 10px;">🔒</div>
+        <div class="modal-title">ДОСТУП НЕ ОПЛАЧЕН</div>
+        <div class="modal-text">
+            Для прослушивания аудио заданий, пожалуйста, заходите по вашей <b>персональной ссылке</b>, выданной после оплаты курса.
+        </div>
+        <button class="modal-btn" onclick="closeAccessModal()">ПОНЯТНО</button>
+    </div>
+</div>
 
 <div class="container" id="main-app-container">
     
@@ -1049,7 +1116,22 @@ let currentAudioInterval = null;
 let activeAudioBtn = null;
 let activeDayNum = null;
 
+// Функции управления модальным окном
+function showAccessModal() {
+    document.getElementById('access-modal').style.display = 'flex';
+}
+
+function closeAccessModal() {
+    document.getElementById('access-modal').style.display = 'none';
+}
+
 function playAudio(dayNumber, btnElement) {
+    // ПРОВЕРКА: если в ссылке нет имени или возраста — блокируем аудио и показываем окно
+    if (!rawName || rawName.trim() === '' || !rawAge || isNaN(rawAge)) {
+        showAccessModal();
+        return;
+    }
+
     if (currentAudio) {
         currentAudio.pause();
         currentAudio.currentTime = 0;
