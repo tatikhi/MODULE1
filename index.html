@@ -1123,44 +1123,55 @@ function closeAccessModal() {
     if (modal) modal.style.display = 'none';
 }
 
-// Проверка доступа и запуск аудио с исправленным возвратом текста кнопки
+// ПРОВЕРКА ДОСТУПА ТОЛЬКО ДЛЯ ПЕРВОГО ДНЯ (ИЛИ ЕСЛИ ЕЩЕ НЕ ПОДТВЕРЖДЕНО В СЕССИИ)
 async function playAudio(dayNumber, btnElement) {
-    if (!safeName || safeName === '' || !rawAge || isNaN(rawAge)) {
-        showAccessModal();
-        return;
-    }
+    // Проверяем, подтвержден ли доступ уже в этой сессии браузера
+    const isAccessVerified = sessionStorage.getItem(`verified_${docId}`) === 'true';
 
-    btnElement.disabled = true;
-    const btnContentEl = document.getElementById(`audio-btn-content-${dayNumber}`);
-    if (btnContentEl) {
-        btnContentEl.innerHTML = `⏳ Проверка доступа...`;
-    }
+    // Если это День 1 и доступ еще не проверялся/не подтверждался
+    if (dayNumber === 1 && !isAccessVerified) {
+        if (!safeName || safeName === '' || !rawAge || isNaN(rawAge)) {
+            showAccessModal();
+            return;
+        }
 
-    // Ссылка на Google Apps Script (можете менять её в этой строке)
-    const scriptURL = 'https://script.google.com/macros/s/AKfycbycTxjur2q7eoRuqGDQXG1UOjWgZJL14fzVGUz5vhXf96i5QDCYJ31aSOaLAinoSQ4cPQ/exec';
+        btnElement.disabled = true;
+        const btnContentEl = document.getElementById(`audio-btn-content-${dayNumber}`);
+        if (btnContentEl) {
+            btnContentEl.innerHTML = `⏳ Проверка доступа...`;
+        }
 
-    try {
-        const queryStr = `?name=${encodeURIComponent(safeName)}&age=${encodeURIComponent(rawAge)}&key=${encodeURIComponent(rawKey || '')}`;
-        const response = await fetch(scriptURL + queryStr);
-        const data = await response.json();
+        // Ссылка на Google Apps Script (можете менять её в этой строке при необходимости)
+        const scriptURL = 'https://script.google.com/macros/s/AKfycbycTxjur2q7eoRuqGDQXG1UOjWgZJL14fzVGUz5vhXf96i5QDCYJ31aSOaLAinoSQ4cPQ/exec';
 
-        if (!data.success) {
+        try {
+            const queryStr = `?name=${encodeURIComponent(safeName)}&age=${encodeURIComponent(rawAge)}&key=${encodeURIComponent(rawKey || '')}`;
+            const response = await fetch(scriptURL + queryStr);
+            const data = await response.json();
+
+            if (!data.success) {
+                btnElement.disabled = false;
+                if (btnContentEl) {
+                    btnContentEl.innerHTML = `${svgPlayIcon} <span>СЛУШАТЬ ЗАДАНИЕ</span>`;
+                }
+                showAccessModal();
+                return;
+            }
+
+            // Успешно прошли проверку! Запоминаем в сессии, что доступ разрешен для всех дней.
+            sessionStorage.setItem(`verified_${docId}`, 'true');
+
+        } catch (error) {
+            console.error("Ошибка проверки:", error);
             btnElement.disabled = false;
             if (btnContentEl) {
                 btnContentEl.innerHTML = `${svgPlayIcon} <span>СЛУШАТЬ ЗАДАНИЕ</span>`;
             }
-            showAccessModal();
+            alert("Не удалось проверить доступ. Проверьте интернет-соединение.");
             return;
         }
-    } catch (error) {
-        console.error("Ошибка проверки:", error);
-        btnElement.disabled = false;
-        if (btnContentEl) {
-            btnContentEl.innerHTML = `${svgPlayIcon} <span>СЛУШАТЬ ЗАДАНИЕ</span>`;
-        }
-        alert("Не удалось проверить доступ. Проверьте интернет-соединение.");
-        return;
-    }
+    } 
+    // Для дней 2-30 или если День 1 уже проверялся ранее в эту сессию — сразу запускаем аудио без запросов!
 
     if (currentAudio) {
         currentAudio.pause();
@@ -1176,6 +1187,7 @@ async function playAudio(dayNumber, btnElement) {
     activeAudioBtn = btnElement;
     activeDayNum = dayNumber;
 
+    const btnContentEl = document.getElementById(`audio-btn-content-${dayNumber}`);
     const progressContainer = document.getElementById(`audio-progress-${dayNumber}`);
     const fillElement = document.getElementById(`audio-fill-${dayNumber}`);
     const timerElement = document.getElementById(`audio-timer-${dayNumber}`);
