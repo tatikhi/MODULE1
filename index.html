@@ -354,14 +354,6 @@
             gap: 10px;
         }
 
-        .bonus-centered-text {
-            text-align: center;
-            margin-bottom: 12px;
-            font-size: 14px;
-            font-weight: 700;
-            color: var(--btn-text-dark);
-        }
-
         .audio-player-wrapper {
             margin-bottom: 10px;
         }
@@ -673,12 +665,12 @@
 
 <canvas id="confetti-canvas"></canvas>
 
-<!-- КАСТОМНОЕ МОДАЛЬНОЕ ОКНО -->
+<!-- МОДАЛЬНОЕ ОКНО ОШИБКИ ДОСТУПА -->
 <div id="access-modal">
     <div class="modal-content">
         <div style="font-size: 36px; margin-bottom: 10px;">🔒</div>
-        <div class="modal-title">ДОСТУП НЕ ОПЛАЧЕН</div>
-        <div class="modal-text">
+        <div class="modal-title" id="modal-title-text">ДОСТУП НЕ ОПЛАЧЕН</div>
+        <div class="modal-text" id="modal-body-text">
             Для прослушивания аудио заданий, пожалуйста, заходите по вашей <b>персональной ссылке</b>, выданной после оплаты курса.
         </div>
         <button class="modal-btn" onclick="closeAccessModal()">ПОНЯТНО</button>
@@ -1113,8 +1105,19 @@ let currentAudioInterval = null;
 let activeAudioBtn = null;
 let activeDayNum = null;
 
-function showAccessModal() {
+function showAccessModal(isCert = false) {
     const modal = document.getElementById('access-modal');
+    const titleEl = document.getElementById('modal-title-text');
+    const bodyEl = document.getElementById('modal-body-text');
+
+    if (isCert) {
+        titleEl.textContent = "СЕРТИФИКАЦИЯ НЕДОСТУПНА";
+        bodyEl.innerHTML = "Именной сертификат будет доступен только по вашей <b>персональной ссылке</b> после оплаты курса.";
+    } else {
+        titleEl.textContent = "ДОСТУП НЕ ОПЛАЧЕН";
+        bodyEl.innerHTML = "Для прослушивания аудио заданий, пожалуйста, заходите по вашей <b>персональной ссылке</b>, выданной после оплаты курса.";
+    }
+
     if (modal) modal.style.display = 'flex';
 }
 
@@ -1123,15 +1126,13 @@ function closeAccessModal() {
     if (modal) modal.style.display = 'none';
 }
 
-// ПРОВЕРКА ДОСТУПА ТОЛЬКО ДЛЯ ПЕРВОГО ДНЯ (ИЛИ ЕСЛИ ЕЩЕ НЕ ПОДТВЕРЖДЕНО В СЕССИИ)
+// ПРОВЕРКА ДОСТУПА ТОЛЬКО ДЛЯ ПЕРВОГО ДНЯ
 async function playAudio(dayNumber, btnElement) {
-    // Проверяем, подтвержден ли доступ уже в этой сессии браузера
     const isAccessVerified = sessionStorage.getItem(`verified_${docId}`) === 'true';
 
-    // Если это День 1 и доступ еще не проверялся/не подтверждался
     if (dayNumber === 1 && !isAccessVerified) {
         if (!safeName || safeName === '' || !rawAge || isNaN(rawAge)) {
-            showAccessModal();
+            showAccessModal(false);
             return;
         }
 
@@ -1141,7 +1142,7 @@ async function playAudio(dayNumber, btnElement) {
             btnContentEl.innerHTML = `⏳ Проверка доступа...`;
         }
 
-        // Ссылка на Google Apps Script (можете менять её в этой строке при необходимости)
+        // Ссылка на Google Apps Script
         const scriptURL = 'https://script.google.com/macros/s/AKfycbycTxjur2q7eoRuqGDQXG1UOjWgZJL14fzVGUz5vhXf96i5QDCYJ31aSOaLAinoSQ4cPQ/exec';
 
         try {
@@ -1154,11 +1155,10 @@ async function playAudio(dayNumber, btnElement) {
                 if (btnContentEl) {
                     btnContentEl.innerHTML = `${svgPlayIcon} <span>СЛУШАТЬ ЗАДАНИЕ</span>`;
                 }
-                showAccessModal();
+                showAccessModal(false);
                 return;
             }
 
-            // Успешно прошли проверку! Запоминаем в сессии, что доступ разрешен для всех дней.
             sessionStorage.setItem(`verified_${docId}`, 'true');
 
         } catch (error) {
@@ -1171,7 +1171,6 @@ async function playAudio(dayNumber, btnElement) {
             return;
         }
     } 
-    // Для дней 2-30 или если День 1 уже проверялся ранее в эту сессию — сразу запускаем аудио без запросов!
 
     if (currentAudio) {
         currentAudio.pause();
@@ -1377,7 +1376,35 @@ function openAndPrintColoring() {
     }
 }
 
-function generateCertificate() {
+// ГЕНЕРАЦИЯ СЕРТИФИКАТА С ПРОВЕРКОЙ ВЕРИФИКАЦИИ
+async function generateCertificate() {
+    const isAccessVerified = sessionStorage.getItem(`verified_${docId}`) === 'true';
+
+    // Если в текущей сессии доступ не был подтвержден через Google Таблицу
+    if (!isAccessVerified) {
+        if (!safeName || safeName === '' || !rawAge || isNaN(rawAge)) {
+            showAccessModal(true);
+            return;
+        }
+
+        // Делаем контрольный быстрый запрос к таблице прямо перед выдачей сертификата
+        const scriptURL = 'https://script.google.com/macros/s/AKfycbycTxjur2q7eoRuqGDQXG1UOjWgZJL14fzVGUz5vhXf96i5QDCYJ31aSOaLAinoSQ4cPQ/exec';
+        try {
+            const queryStr = `?name=${encodeURIComponent(safeName)}&age=${encodeURIComponent(rawAge)}&key=${encodeURIComponent(rawKey || '')}`;
+            const response = await fetch(scriptURL + queryStr);
+            const data = await response.json();
+
+            if (!data.success) {
+                showAccessModal(true);
+                return;
+            }
+            sessionStorage.setItem(`verified_${docId}`, 'true');
+        } catch (error) {
+            showAccessModal(true);
+            return;
+        }
+    }
+
     const btn = document.getElementById('cert-btn');
     btn.textContent = '⏳ Создаем сертификат...';
     btn.style.pointerEvents = 'none';
