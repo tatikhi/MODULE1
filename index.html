@@ -840,6 +840,7 @@ const daysData = [
 const urlParams = new URLSearchParams(window.location.search);
 const rawName = urlParams.get('name');
 const rawAge = urlParams.get('age');
+const rawKey = urlParams.get('key'); // Читаем ключ из ссылки
 const urlProgress = urlParams.get('p');
 
 const docId = (rawName && rawName.trim() !== '') ? decodeURIComponent(rawName) : 'СУПЕРГЕРОЙ';
@@ -1017,9 +1018,10 @@ function copyPersonalLink() {
     const baseUrl = window.location.origin + window.location.pathname;
     const nameParam = rawName ? `?name=${encodeURIComponent(rawName)}` : '';
     const ageParam = rawAge ? `${nameParam ? '&' : '?'}age=${encodeURIComponent(rawAge)}` : '';
-    const separator = (nameParam || ageParam) ? '&' : '?';
+    const keyParam = rawKey ? `${(nameParam || ageParam) ? '&' : '?'}key=${encodeURIComponent(rawKey)}` : '';
+    const separator = (nameParam || ageParam || keyParam) ? '&' : '?';
     const progressParam = completedDays.length > 0 ? `${separator}p=${completedDays.join(',')}` : '';
-    const fullLink = baseUrl + nameParam + ageParam + progressParam;
+    const fullLink = baseUrl + nameParam + ageParam + keyParam + progressParam;
 
     navigator.clipboard.writeText(fullLink).then(() => {
         alert('Ссылка скопирована!');
@@ -1117,7 +1119,7 @@ function closeAccessModal() {
     document.getElementById('access-modal').style.display = 'none';
 }
 
-// Проверка доступа происходит прямо при клике на кнопку аудио (исключая гонку времени)
+// Проверка доступа по имени, возрасту и ключу через ваш новый Google Apps Script
 async function playAudio(dayNumber, btnElement) {
     if (!rawName || rawName.trim() === '' || !rawAge || isNaN(rawAge)) {
         showAccessModal();
@@ -1128,10 +1130,11 @@ async function playAudio(dayNumber, btnElement) {
     btnElement.disabled = true;
     btnElement.innerHTML = `<div class="audio-btn-content">⏳ Проверка доступа...</div>`;
 
-    const scriptURL = 'https://script.google.com/macros/s/AKfycbwpalIaCbnuHc0IMH1XgrR5OBVl3yV_Ovh0pRk5E7YdoyBxaa2--PRJfV530qEoAJDeUA/exec';
+    // Новая ссылка на Google Apps Script, которую вы предоставили
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbycTxjur2q7eoRuqGDQXG1UOjWgZJL14fzVGUz5vhXf96i5QDCYJ31aSOaLAinoSQ4cPQ/exec';
 
     try {
-        const response = await fetch(`${scriptURL}?name=${encodeURIComponent(rawName)}&age=${encodeURIComponent(rawAge)}`);
+        const response = await fetch(`${scriptURL}?name=${encodeURIComponent(rawName)}&age=${encodeURIComponent(rawAge)}&key=${encodeURIComponent(rawKey || '')}`);
         const data = await response.json();
 
         if (!data.success) {
