@@ -780,22 +780,7 @@ window.addEventListener('load', () => {
         const img = new Image();
         img.src = src;
     });
-
-    // Проверка доступа через Google Таблицу при загрузке страницы
-    if (rawName && rawName.trim() !== '' && rawAge && !isNaN(rawAge)) {
-        const scriptURL = 'https://script.google.com/macros/s/AKfycbwpalIaCbnuHc0IMH1XgrR5OBVl3yV_Ovh0pRk5E7YdoyBxaa2--PRJfV530qEoAJDeUA/exec';
-        fetch(`${scriptURL}?name=${encodeURIComponent(rawName)}&age=${encodeURIComponent(rawAge)}`)
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    isSheetVerified = true;
-                }
-            })
-            .catch(err => console.error("Ошибка проверки доступа через таблицу:", err));
-    }
 });
-
-let isSheetVerified = false;
 
 const svgLightbulb = `<svg class="svg-icon" style="fill:#F1C40F; width:26px; height:26px; flex-shrink:0;" viewBox="0 0 24 24"><path d="M12 2C8.14 2 5 5.14 5 9c0 2.38 1.19 4.47 3 5.74V17c0 .55.45 1 1 1h6c.55 0 1-.45 1-1v-2.26c1.81-1.27 3-3.36 3-5.74 0-3.86-3.14-7-7-7zm-2 17h4v1h-4zm0 2h4v1h-4z"/></svg>`;
 
@@ -1116,15 +1101,7 @@ function launchConfetti(event) {
     animate();
 }
 
-function updateProgress() {
-    const total = 30;
-    const uniqueCompleted = [...new Set(completedDays)].filter(n => n >= 1 && n <= 30);
-    const current = uniqueCompleted.length;
-    const percentage = Math.round((current / total) * 100);
-
-    document.getElementById('progress-text').textContent = `${current} / ${total} заданий`;
-    document.getElementById('progress-fill').style.width = `${percentage}%`;
-}
+updateProgress();
 
 let currentAudio = null;
 let currentAudioInterval = null;
@@ -1140,10 +1117,34 @@ function closeAccessModal() {
     document.getElementById('access-modal').style.display = 'none';
 }
 
-function playAudio(dayNumber, btnElement) {
-    // ПРОВЕРКА: если в ссылке нет имени, возраста ИЛИ ребенок не подтвержден в таблице — блокируем аудио
-    if (!rawName || rawName.trim() === '' || !rawAge || isNaN(rawAge) || !isSheetVerified) {
+// Проверка доступа происходит прямо при клике на кнопку аудио (исключая гонку времени)
+async function playAudio(dayNumber, btnElement) {
+    if (!rawName || rawName.trim() === '' || !rawAge || isNaN(rawAge)) {
         showAccessModal();
+        return;
+    }
+
+    const originalContent = btnElement.innerHTML;
+    btnElement.disabled = true;
+    btnElement.innerHTML = `<div class="audio-btn-content">⏳ Проверка доступа...</div>`;
+
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbwpalIaCbnuHc0IMH1XgrR5OBVl3yV_Ovh0pRk5E7YdoyBxaa2--PRJfV530qEoAJDeUA/exec';
+
+    try {
+        const response = await fetch(`${scriptURL}?name=${encodeURIComponent(rawName)}&age=${encodeURIComponent(rawAge)}`);
+        const data = await response.json();
+
+        if (!data.success) {
+            btnElement.disabled = false;
+            btnElement.innerHTML = originalContent;
+            showAccessModal();
+            return;
+        }
+    } catch (error) {
+        console.error("Ошибка проверки:", error);
+        btnElement.disabled = false;
+        btnElement.innerHTML = originalContent;
+        alert("Не удалось проверить доступ. Проверьте интернет-соединение.");
         return;
     }
 
