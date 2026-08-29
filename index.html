@@ -780,7 +780,22 @@ window.addEventListener('load', () => {
         const img = new Image();
         img.src = src;
     });
+
+    // Проверка доступа через Google Таблицу при загрузке страницы
+    if (rawName && rawName.trim() !== '' && rawAge && !isNaN(rawAge)) {
+        const scriptURL = 'https://script.google.com/macros/s/AKfycbwpalIaCbnuHc0IMH1XgrR5OBVl3yV_Ovh0pRk5E7YdoyBxaa2--PRJfV530qEoAJDeUA/exec';
+        fetch(`${scriptURL}?name=${encodeURIComponent(rawName)}&age=${encodeURIComponent(rawAge)}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    isSheetVerified = true;
+                }
+            })
+            .catch(err => console.error("Ошибка проверки доступа через таблицу:", err));
+    }
 });
+
+let isSheetVerified = false;
 
 const svgLightbulb = `<svg class="svg-icon" style="fill:#F1C40F; width:26px; height:26px; flex-shrink:0;" viewBox="0 0 24 24"><path d="M12 2C8.14 2 5 5.14 5 9c0 2.38 1.19 4.47 3 5.74V17c0 .55.45 1 1 1h6c.55 0 1-.45 1-1v-2.26c1.81-1.27 3-3.36 3-5.74 0-3.86-3.14-7-7-7zm-2 17h4v1h-4zm0 2h4v1h-4z"/></svg>`;
 
@@ -1126,8 +1141,8 @@ function closeAccessModal() {
 }
 
 function playAudio(dayNumber, btnElement) {
-    // ПРОВЕРКА: если в ссылке нет имени или возраста — блокируем аудио и показываем окно
-    if (!rawName || rawName.trim() === '' || !rawAge || isNaN(rawAge)) {
+    // ПРОВЕРКА: если в ссылке нет имени, возраста ИЛИ ребенок не подтвержден в таблице — блокируем аудио
+    if (!rawName || rawName.trim() === '' || !rawAge || isNaN(rawAge) || !isSheetVerified) {
         showAccessModal();
         return;
     }
