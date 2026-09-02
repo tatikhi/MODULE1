@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -12,16 +11,16 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
         :root {
-            --header-bg: #68C4C6;
-            --header-dark: #50A3A6;
-            --yellow-box: #FFF8D6;
+            --header-bg: #68C4C6;       /* Пастельный бирюзовый */
+            --header-dark: #50A3A6;     /* Мягкий тёмно-бирюзовый */
+            --yellow-box: #FFF8D6;      /* Пастельно-жёлтая плашка */
             --yellow-border: #FFE680;
-            --red-banner: #E56B6F;
-            --pastel-green: #5CDB95;
-            --turquoise-accent: #68C4C6;
-            --btn-text-dark: #1A3636;
-            --header-text-unified: #2C3E50;
-            --soft-dark-yellow: #5C4A28;
+            --red-banner: #E56B6F;      /* Приглушённый кораллово-красный */
+            --pastel-green: #5CDB95;    /* Пастельный зелёный */
+            --turquoise-accent: #68C4C6;/* Пастельно-бирюзовый цвет акцентов */
+            --btn-text-dark: #1A3636;   /* Тёмно-пастельный цвет для максимальной читаемости */
+            --header-text-unified: #2C3E50; /* Единый цвет текста для элементов шапки */
+            --soft-dark-yellow: #5C4A28;/* Мягкий тёмный цвет текста для жёлтой плашки */
             --bg-color: #EBF5FB;
             --card-radius: 20px;
         }
@@ -34,6 +33,7 @@
             -webkit-tap-highlight-color: transparent;
         }
 
+        /* ХОСТ-КАНВАС ДЛЯ КОНФЕТТИ */
         #confetti-canvas {
             position: fixed;
             top: 0;
@@ -44,6 +44,7 @@
             z-index: 9999;
         }
 
+        /* РАЗБРОСАННЫЙ АСИММЕТРИЧНЫЙ ПАТТЕРН ИЗ КРУЖКОВ */
         body {
             background-color: var(--bg-color);
             background-image: url("data:image/svg+xml,%3Csvg width='70' height='70' viewBox='0 0 70 70' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='10' cy='10' r='5' fill='%233498db' opacity='0.22'/%3E%3Ccircle cx='50' cy='15' r='4' fill='%2368c4c6' opacity='0.3'/%3E%3Ccircle cx='60' cy='45' r='6' fill='%233498db' opacity='0.18'/%3E%3Ccircle cx='25' cy='55' r='4.5' fill='%2368c4c6' opacity='0.25'/%3E%3Ccircle cx='20' cy='32' r='2.5' fill='%233498db' opacity='0.2'/%3E%3Ccircle cx='55' cy='62' r='3' fill='%2368c4c6' opacity='0.22'/%3E%3C/svg%3E");
@@ -63,6 +64,7 @@
             box-shadow: 0 10px 30px rgba(0,0,0,0.08);
         }
 
+        /* ДВА РАЗДЕЛЬНЫХ БЛОКА ШАПКИ */
         .header-block {
             background: linear-gradient(135deg, var(--header-bg), var(--header-dark));
             border-radius: var(--card-radius);
@@ -74,6 +76,7 @@
             box-shadow: 0 4px 15px rgba(104, 196, 198, 0.15);
         }
 
+        /* ЕДИНАЯ РАМКА ДЛЯ ПРИВЕТСТВИЯ И ЛИСЕНКА (СТРОГО ЦЕНТРИРОВАНА) */
         .greeting-box {
             background: #FFFFFF;
             color: var(--header-text-unified);
@@ -96,6 +99,7 @@
             text-align: center;
         }
 
+        /* АВАТАРКА ЛИСЕНКА (ВЕРХНЯЯ) */
         .fox-avatar-top {
             width: 48px;
             height: 48px;
@@ -111,6 +115,7 @@
             object-fit: cover;
         }
 
+        /* АВАТАРКА ЛИСЕНКА (В КАРТОЧКАХ) */
         .fox-avatar-card {
             width: 48px;
             height: 48px;
@@ -144,6 +149,7 @@
             text-align: center;
         }
 
+        /* БЛОК ЦЕНТРИРОВАННОЙ КНОПКИ В ШАПКЕ */
         .header-buttons {
             display: flex;
             justify-content: center;
@@ -200,6 +206,7 @@
             background: rgba(255, 255, 255, 0.3);
         }
 
+        /* ИНФОРМАЦИЯ О РЕБЕНКЕ */
         .child-info-box {
             background: var(--yellow-box);
             border: none;
@@ -252,6 +259,7 @@
             text-align: center;
         }
 
+        /* ЗАГОЛОВКИ НЕДЕЛЬ */
         .week-title {
             text-align: center;
             margin: 20px auto 20px auto;
@@ -265,6 +273,7 @@
             background: #FFFFFF;
         }
 
+        /* КАРТОЧКА ДНЯ */
         .day-card {
             background: #FFFFFF;
             border: 2px solid #E2E8F0;
@@ -355,6 +364,15 @@
             gap: 10px;
         }
 
+        .bonus-centered-text {
+            text-align: center;
+            margin-bottom: 12px;
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--btn-text-dark);
+        }
+
+        /* УВЕЛИЧЕННАЯ ШИРОКАЯ КНОПКА С АУДИОПЛЕЕРОМ ВНУТРИ */
         .audio-player-wrapper {
             margin-bottom: 10px;
         }
@@ -405,6 +423,7 @@
             height: 22px;
         }
 
+        /* ПОЛОСКА ПРОГРЕССА АУДИО (С функцией интерактивной перемотки в аудиодорожках) */
         .audio-progress-container {
             display: flex;
             align-items: center;
@@ -459,6 +478,7 @@
             text-align: right;
         }
 
+        /* КНОПКА ВСЕ СДЕЛАНО */
         .btn-action {
             width: 100%;
             background: #FFF9E6;
@@ -523,6 +543,7 @@
             flex-shrink: 0;
         }
 
+        /* МЕМОРИ ИГРА */
         .memory-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
@@ -577,6 +598,7 @@
             color: var(--btn-text-dark);
         }
 
+        /* МОДАЛЬНОЕ ОКНО ПРЕДУПРЕЖДЕНИЯ */
         #access-modal {
             display: none;
             position: fixed;
@@ -630,6 +652,7 @@
             box-shadow: 0 4px 10px rgba(104, 196, 198, 0.3);
         }
 
+        /* FOOTER & КНОПКА СБРОСА */
         .footer {
             margin-top: 30px;
             text-align: center;
@@ -666,12 +689,12 @@
 
 <canvas id="confetti-canvas"></canvas>
 
-<!-- МОДАЛЬНОЕ ОКНО ОШИБКИ ДОСТУПА -->
+<!-- КАСТОМНОЕ МОДАЛЬНОЕ ОКНО -->
 <div id="access-modal">
     <div class="modal-content">
         <div style="font-size: 36px; margin-bottom: 10px;">🔒</div>
-        <div class="modal-title" id="modal-title-text">ДОСТУП НЕ ОПЛАЧЕН</div>
-        <div class="modal-text" id="modal-body-text">
+        <div class="modal-title">ДОСТУП НЕ ОПЛАЧЕН</div>
+        <div class="modal-text">
             Для прослушивания аудио заданий, пожалуйста, заходите по вашей <b>персональной ссылке</b>, выданной после оплаты курса.
         </div>
         <button class="modal-btn" onclick="closeAccessModal()">ПОНЯТНО</button>
@@ -760,8 +783,17 @@ window.addEventListener('load', () => {
 });
 
 const svgLightbulb = `<svg class="svg-icon" style="fill:#F1C40F; width:26px; height:26px; flex-shrink:0;" viewBox="0 0 24 24"><path d="M12 2C8.14 2 5 5.14 5 9c0 2.38 1.19 4.47 3 5.74V17c0 .55.45 1 1 1h6c.55 0 1-.45 1-1v-2.26c1.81-1.27 3-3.36 3-5.74 0-3.86-3.14-7-7-7zm-2 17h4v1h-4zm0 2h4v1h-4z"/></svg>`;
-const svgSparklyTrophy = `<svg class="svg-trophy-animated" viewBox="0 0 24 24"><path d="M19 5h-2V3H7v2H5c-1.1 0-2 .9-2 2v1c0 2.55 1.92 4.63 4.39 4.94A5.01 5.01 0 0011 15.9V18H8v2h8v-2h-3v-2.1c2.12-.39 3.79-2.02 4.39-4.14C19.08 11.63 21 9.55 21 7V5c0-1.1-.9-2-2-2zM5 8V7h2v3.82C5.84 10.4 5 9.3 5 8zm14 0c0 1.3-.84 2.4-2 2.82V7h2v1z"/><path d="M3.5 1.5l.5 1.2 1.2.5-1.2.5-.5 1.2-.5-1.2-1.2-.5 1.2-.5z" fill="#F1C40F"/><path d="M20.5 1.5l.5 1.2 1.2.5-1.2.5-.5 1.2-.5-1.2-1.2-.5 1.2-.5z" fill="#F1C40F"/></svg>`;
+
+const svgSparklyTrophy = `
+    <svg class="svg-trophy-animated" viewBox="0 0 24 24">
+        <path d="M19 5h-2V3H7v2H5c-1.1 0-2 .9-2 2v1c0 2.55 1.92 4.63 4.39 4.94A5.01 5.01 0 0011 15.9V18H8v2h8v-2h-3v-2.1c2.12-.39 3.79-2.02 4.39-4.14C19.08 11.63 21 9.55 21 7V5c0-1.1-.9-2-2-2zM5 8V7h2v3.82C5.84 10.4 5 9.3 5 8zm14 0c0 1.3-.84 2.4-2 2.82V7h2v1z"/>
+        <path d="M3.5 1.5l.5 1.2 1.2.5-1.2.5-.5 1.2-.5-1.2-1.2-.5 1.2-.5z" fill="#F1C40F"/>
+        <path d="M20.5 1.5l.5 1.2 1.2.5-1.2.5-.5 1.2-.5-1.2-1.2-.5 1.2-.5z" fill="#F1C40F"/>
+    </svg>
+`;
+
 const svgQuestionCard = `<svg class="memory-q-icon" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 16h-2v-2h2v2zm1.07-7.75l-.9.92C12.45 11.9 12 12.5 12 14h-2v-.5c0-1.1.45-2.1 1.17-2.83l1.24-1.26c.37-.36.59-.86.59-1.41 0-1.1-.9-2-2-2s-2 .9-2 2H7c0-2.76 2.24-5 5-5s5 2.24 5 5c0 1.04-.42 1.99-1.07 2.75z"/></svg>`;
+
 const svgPlayIcon = `<svg class="svg-icon" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>`;
 const svgSpeakerIcon = `<svg class="svg-icon" viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>`;
 
@@ -776,6 +808,7 @@ const daysData = [
     { day: 5, week: 1, title: "ДЕНЬ 5 : CLAP", parentText: textParentMovement },
     { day: 6, week: 1, title: "ДЕНЬ 6 : FLY", parentText: textParentMovement },
     { day: 7, week: 1, title: "ДЕНЬ 7 : JUMP", parentText: textParentMovement },
+
     { day: 8, week: 2, title: "ДЕНЬ 8 : HANDS", parentText: textParentMovement },
     { day: 9, week: 2, title: "ДЕНЬ 9 : FEET", parentText: textParentMovement },
     { day: 10, week: 2, title: "ДЕНЬ 10 : HEAD", parentText: textParentMovement },
@@ -783,6 +816,7 @@ const daysData = [
     { day: 12, week: 2, title: "ДЕНЬ 12 : EYES", parentText: textParentMovement },
     { day: 13, week: 2, title: "ДЕНЬ 13 : EARS", parentText: textParentMovement },
     { day: 14, week: 2, title: "ДЕНЬ 14 : MOUTH", parentText: textParentMovement },
+
     { day: 15, week: 3, title: "ДЕНЬ 15 : DOG", parentText: textParentMovement },
     { day: 16, week: 3, title: "ДЕНЬ 16 : CAT", parentText: textParentMovement },
     { day: 17, week: 3, title: "ДЕНЬ 17 : BIRD", parentText: textParentMovement },
@@ -790,6 +824,7 @@ const daysData = [
     { day: 19, week: 3, title: "ДЕНЬ 19 : MONKEY", parentText: textParentMovement },
     { day: 20, week: 3, title: "ДЕНЬ 20 : BEAR", parentText: textParentMovement },
     { day: 21, week: 3, title: "ДЕНЬ 21 : RABBIT", parentText: textParentMovement },
+
     { day: 22, week: 4, title: "ДЕНЬ 22 : RED", parentText: textParentColor },
     { day: 23, week: 4, title: "ДЕНЬ 23 : BLUE", parentText: textParentColor },
     { day: 24, week: 4, title: "ДЕНЬ 24 : YELLOW", parentText: textParentColor },
@@ -797,18 +832,17 @@ const daysData = [
     { day: 26, week: 4, title: "ДЕНЬ 26 : ORANGE", parentText: textParentColor },
     { day: 27, week: 4, title: "ДЕНЬ 27 : PINK", parentText: textParentColor },
     { day: 28, week: 4, title: "ДЕНЬ 28 : BROWN", parentText: textParentColor },
-    { day: 29, week: 5, isBonus: true, title: "ДЕНЬ 29 : МИНИ-ИГРА «МЕМОРИ»", parentText: "Родителям: переворачивайте карточки и находите пары." },
-    { day: 30, week: 5, isBonus: true, title: "ДЕНЬ 30 : РАСКРАСКА", parentText: "Родителям: финальное творческое задание!" }
+
+    { day: 29, week: 5, isBonus: true, title: "ДЕНЬ 29 : МИНИ-ИГРА «МЕМОРИ» (НАЙДИ ПАРУ)", parentText: "Родителям: переворачивайте карточки и находите одинаковые пары «слово+картинка»." },
+    { day: 30, week: 5, isBonus: true, title: "ДЕНЬ 30 : ТВОРЧЕСКОЕ ЗАДАНИЕ «РАСКРАСКА»", parentText: "Родителям: финальное творческое задание!" }
 ];
 
 const urlParams = new URLSearchParams(window.location.search);
 const rawName = urlParams.get('name');
 const rawAge = urlParams.get('age');
-const rawKey = urlParams.get('key'); 
 const urlProgress = urlParams.get('p');
 
-const safeName = (rawName && typeof rawName === 'string') ? rawName.trim() : '';
-const docId = safeName !== '' ? safeName : 'СУПЕРГЕРОЙ';
+const docId = (rawName && rawName.trim() !== '') ? decodeURIComponent(rawName) : 'СУПЕРГЕРОЙ';
 const displayName = docId.split(/[_\-\s]+/)[0].toUpperCase();
 const childAge = (rawAge && !isNaN(rawAge)) ? parseInt(rawAge.trim(), 10) : 5;
 
@@ -832,25 +866,14 @@ if (urlProgress) {
     try {
         completedDays = urlProgress.split(',').map(Number).filter(n => !isNaN(n) && n >= 1 && n <= 30);
         localStorage.setItem(STORAGE_KEY, JSON.stringify(completedDays));
-    } catch(e) {}
-}
-
-if (!completedDays || completedDays.length === 0) {
-    try {
-        const parsed = JSON.parse(localStorage.getItem(STORAGE_KEY));
-        completedDays = Array.isArray(parsed) ? parsed : [];
     } catch(e) {
-        completedDays = [];
+        completedDays = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
     }
+} else {
+    completedDays = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
 }
 
-let matchedMemoryKeys = [];
-try {
-    const parsedMatched = JSON.parse(localStorage.getItem(MEMORY_MATCHED_KEY));
-    matchedMemoryKeys = Array.isArray(parsedMatched) ? parsedMatched : [];
-} catch(e) {
-    matchedMemoryKeys = [];
-}
+let matchedMemoryKeys = JSON.parse(localStorage.getItem(MEMORY_MATCHED_KEY)) || [];
 
 function renderTracker() {
     const container = document.getElementById('days-container');
@@ -944,9 +967,7 @@ function isDayUnlocked(day) {
 function toggleDay(day, event) {
     if (!completedDays.includes(day)) {
         completedDays.push(day);
-        try {
-            localStorage.setItem(STORAGE_KEY, JSON.stringify(completedDays));
-        } catch(e) {}
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(completedDays));
         launchConfetti(event);
         renderTracker();
     }
@@ -961,16 +982,11 @@ function resetDayForParents() {
             
             if (dayToReset <= 29) {
                 matchedMemoryKeys = [];
-                try {
-                    localStorage.setItem(MEMORY_MATCHED_KEY, JSON.stringify([]));
-                    localStorage.removeItem(MEMORY_LAYOUT_KEY);
-                } catch(e){}
+                localStorage.setItem(MEMORY_MATCHED_KEY, JSON.stringify([]));
+                localStorage.removeItem(MEMORY_LAYOUT_KEY);
             }
 
-            try {
-                localStorage.setItem(STORAGE_KEY, JSON.stringify(completedDays));
-            } catch(e){}
-            
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(completedDays));
             renderTracker();
             alert(`Прогресс сброшен с ${dayToReset}-го дня!`);
         } else {
@@ -988,9 +1004,7 @@ function openDaysForParents() {
             for (let i = 1; i <= maxDay; i++) {
                 completedDays.push(i);
             }
-            try {
-                localStorage.setItem(STORAGE_KEY, JSON.stringify(completedDays));
-            } catch(e){}
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(completedDays));
             renderTracker();
             alert(`Прогресс успешно восстановлен до ${maxDay}-го дня!`);
         } else {
@@ -1003,10 +1017,9 @@ function copyPersonalLink() {
     const baseUrl = window.location.origin + window.location.pathname;
     const nameParam = rawName ? `?name=${encodeURIComponent(rawName)}` : '';
     const ageParam = rawAge ? `${nameParam ? '&' : '?'}age=${encodeURIComponent(rawAge)}` : '';
-    const keyParam = rawKey ? `${(nameParam || ageParam) ? '&' : '?'}key=${encodeURIComponent(rawKey)}` : '';
-    const separator = (nameParam || ageParam || keyParam) ? '&' : '?';
+    const separator = (nameParam || ageParam) ? '&' : '?';
     const progressParam = completedDays.length > 0 ? `${separator}p=${completedDays.join(',')}` : '';
-    const fullLink = baseUrl + nameParam + ageParam + keyParam + progressParam;
+    const fullLink = baseUrl + nameParam + ageParam + progressParam;
 
     navigator.clipboard.writeText(fullLink).then(() => {
         alert('Ссылка скопирована!');
@@ -1094,11 +1107,8 @@ function updateProgress() {
     const current = uniqueCompleted.length;
     const percentage = Math.round((current / total) * 100);
 
-    const txtEl = document.getElementById('progress-text');
-    const fillEl = document.getElementById('progress-fill');
-    
-    if (txtEl) txtEl.textContent = `${current} / ${total} заданий`;
-    if (fillEl) fillEl.style.width = `${percentage}%`;
+    document.getElementById('progress-text').textContent = `${current} / ${total} заданий`;
+    document.getElementById('progress-fill').style.width = `${percentage}%`;
 }
 
 let currentAudio = null;
@@ -1106,72 +1116,21 @@ let currentAudioInterval = null;
 let activeAudioBtn = null;
 let activeDayNum = null;
 
-function showAccessModal(isCert = false) {
-    const modal = document.getElementById('access-modal');
-    const titleEl = document.getElementById('modal-title-text');
-    const bodyEl = document.getElementById('modal-body-text');
-
-    if (isCert) {
-        titleEl.textContent = "СЕРТИФИКАЦИЯ НЕДОСТУПНА";
-        bodyEl.innerHTML = "Именной сертификат будет доступен только по вашей <b>персональной ссылке</b> после оплаты курса.";
-    } else {
-        titleEl.textContent = "ДОСТУП НЕ ОПЛАЧЕН";
-        bodyEl.innerHTML = "Для прослушивания аудио заданий, пожалуйста, заходите по вашей <b>персональной ссылке</b>, выданной после оплаты курса.";
-    }
-
-    if (modal) modal.style.display = 'flex';
+// Функции управления модальным окном
+function showAccessModal() {
+    document.getElementById('access-modal').style.display = 'flex';
 }
 
 function closeAccessModal() {
-    const modal = document.getElementById('access-modal');
-    if (modal) modal.style.display = 'none';
+    document.getElementById('access-modal').style.display = 'none';
 }
 
-// ПРОВЕРКА ДОСТУПА ТОЛЬКО ДЛЯ ПЕРВОГО ДНЯ
-async function playAudio(dayNumber, btnElement) {
-    const isAccessVerified = sessionStorage.getItem(`verified_${docId}`) === 'true';
-
-    if (dayNumber === 1 && !isAccessVerified) {
-        if (!safeName || safeName === '' || !rawAge || isNaN(rawAge)) {
-            showAccessModal(false);
-            return;
-        }
-
-        btnElement.disabled = true;
-        const btnContentEl = document.getElementById(`audio-btn-content-${dayNumber}`);
-        if (btnContentEl) {
-            btnContentEl.innerHTML = `⏳ Проверка доступа...`;
-        }
-
-        // Ссылка на Google Apps Script
-        const scriptURL = 'https://script.google.com/macros/s/AKfycbycTxjur2q7eoRuqGDQXG1UOjWgZJL14fzVGUz5vhXf96i5QDCYJ31aSOaLAinoSQ4cPQ/exec';
-
-        try {
-            const queryStr = `?name=${encodeURIComponent(safeName)}&age=${encodeURIComponent(rawAge)}&key=${encodeURIComponent(rawKey || '')}`;
-            const response = await fetch(scriptURL + queryStr);
-            const data = await response.json();
-
-            if (!data.success) {
-                btnElement.disabled = false;
-                if (btnContentEl) {
-                    btnContentEl.innerHTML = `${svgPlayIcon} <span>СЛУШАТЬ ЗАДАНИЕ</span>`;
-                }
-                showAccessModal(false);
-                return;
-            }
-
-            sessionStorage.setItem(`verified_${docId}`, 'true');
-
-        } catch (error) {
-            console.error("Ошибка проверки:", error);
-            btnElement.disabled = false;
-            if (btnContentEl) {
-                btnContentEl.innerHTML = `${svgPlayIcon} <span>СЛУШАТЬ ЗАДАНИЕ</span>`;
-            }
-            alert("Не удалось проверить доступ. Проверьте интернет-соединение.");
-            return;
-        }
-    } 
+function playAudio(dayNumber, btnElement) {
+    // ПРОВЕРКА: если в ссылке нет имени или возраста — блокируем аудио и показываем окно
+    if (!rawName || rawName.trim() === '' || !rawAge || isNaN(rawAge)) {
+        showAccessModal();
+        return;
+    }
 
     if (currentAudio) {
         currentAudio.pause();
@@ -1187,7 +1146,7 @@ async function playAudio(dayNumber, btnElement) {
     activeAudioBtn = btnElement;
     activeDayNum = dayNumber;
 
-    const btnContentEl = document.getElementById(`audio-btn-content-${dayNumber}`);
+    const btnContent = document.getElementById(`audio-btn-content-${dayNumber}`);
     const progressContainer = document.getElementById(`audio-progress-${dayNumber}`);
     const fillElement = document.getElementById(`audio-fill-${dayNumber}`);
     const timerElement = document.getElementById(`audio-timer-${dayNumber}`);
@@ -1197,8 +1156,8 @@ async function playAudio(dayNumber, btnElement) {
     if (btnElement) {
         btnElement.disabled = true;
         btnElement.classList.add('playing');
-        if (btnContentEl) {
-            btnContentEl.innerHTML = `${svgSpeakerIcon} <span>СЛУШАТЬ ЗАДАНИЕ</span>`;
+        if (btnContent) {
+            btnContent.innerHTML = `${svgSpeakerIcon} <span>СЛУШАТЬ ЗАДАНИЕ</span>`;
         }
     }
 
@@ -1281,9 +1240,7 @@ function flipCard(card, imageSrc, wordKey) {
 
                     if (!matchedMemoryKeys.includes(wordKey)) {
                         matchedMemoryKeys.push(wordKey);
-                        try {
-                            localStorage.setItem(MEMORY_MATCHED_KEY, JSON.stringify(matchedMemoryKeys));
-                        } catch(e){}
+                        localStorage.setItem(MEMORY_MATCHED_KEY, JSON.stringify(matchedMemoryKeys));
                     }
                 } else {
                     activeCards[0].card.classList.remove('flipped');
@@ -1307,11 +1264,7 @@ function shuffleArray(array) {
 }
 
 function renderMemoryGameHtml() {
-    let memoryItems = [];
-    try {
-        const parsed = JSON.parse(localStorage.getItem(MEMORY_LAYOUT_KEY));
-        memoryItems = Array.isArray(parsed) ? parsed : [];
-    } catch(e) {}
+    let memoryItems = JSON.parse(localStorage.getItem(MEMORY_LAYOUT_KEY));
 
     if (!memoryItems || memoryItems.length === 0) {
         const baseItems = [
@@ -1325,9 +1278,7 @@ function renderMemoryGameHtml() {
             { key: 'TIGER', img: 'card_tiger.jpg' }
         ];
         memoryItems = shuffleArray(baseItems);
-        try {
-            localStorage.setItem(MEMORY_LAYOUT_KEY, JSON.stringify(memoryItems));
-        } catch(e){}
+        localStorage.setItem(MEMORY_LAYOUT_KEY, JSON.stringify(memoryItems));
     }
 
     const cardsHtml = memoryItems.map(item => {
@@ -1377,35 +1328,7 @@ function openAndPrintColoring() {
     }
 }
 
-// ГЕНЕРАЦИЯ СЕРТИФИКАТА С ПРОВЕРКОЙ ВЕРИФИКАЦИИ
-async function generateCertificate() {
-    const isAccessVerified = sessionStorage.getItem(`verified_${docId}`) === 'true';
-
-    // Если в текущей сессии доступ не был подтвержден через Google Таблицу
-    if (!isAccessVerified) {
-        if (!safeName || safeName === '' || !rawAge || isNaN(rawAge)) {
-            showAccessModal(true);
-            return;
-        }
-
-        // Делаем контрольный быстрый запрос к таблице прямо перед выдачей сертификата
-        const scriptURL = 'https://script.google.com/macros/s/AKfycbycTxjur2q7eoRuqGDQXG1UOjWgZJL14fzVGUz5vhXf96i5QDCYJ31aSOaLAinoSQ4cPQ/exec';
-        try {
-            const queryStr = `?name=${encodeURIComponent(safeName)}&age=${encodeURIComponent(rawAge)}&key=${encodeURIComponent(rawKey || '')}`;
-            const response = await fetch(scriptURL + queryStr);
-            const data = await response.json();
-
-            if (!data.success) {
-                showAccessModal(true);
-                return;
-            }
-            sessionStorage.setItem(`verified_${docId}`, 'true');
-        } catch (error) {
-            showAccessModal(true);
-            return;
-        }
-    }
-
+function generateCertificate() {
     const btn = document.getElementById('cert-btn');
     btn.textContent = '⏳ Создаем сертификат...';
     btn.style.pointerEvents = 'none';
